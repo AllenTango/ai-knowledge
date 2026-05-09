@@ -1,0 +1,14 @@
+{
+  "id": "b2c3d4e5-f6a7-4b8c-0d1e-2f3a4b5c6d7e",
+  "title": "deepclaude: 让 Claude Code 支持 DeepSeek 后端",
+  "source": "github",
+  "source_url": "https://github.com/aattaran/deepclaude",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "该项目让 Claude Code 自主 Agent 循环支持 DeepSeek V4 Pro 等后端，复用 Claude Code 用户体验，迁移成本低。支持 OpenRouter 及任意 Anthropic 兼容后端，在同等体验下成本降低 17 倍，为开发者提供高性价比的替代方案。",
+  "tags": ["claude", "deepseek", "cost-optimization", "agent", "openrouter"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

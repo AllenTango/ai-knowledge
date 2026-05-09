@@ -1,0 +1,14 @@
+{
+  "id": "d0e1f2a3-b4c5-4d5e-5f6a-7b8c9d0e1f2a3",
+  "title": "chainreason: LLM 在以太坊和 DeFi 任务上的推理能力基准",
+  "source": "github",
+  "source_url": "https://github.com/joshawome/chainreason",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "基准测试 LLM 在以太坊和 DeFi 任务上的推理能力，评估模型在区块链场景下的实用价值。该项目专注区块链领域，填补细分 benchmark 空白，覆盖以太坊和 DeFi 任务，用于评估 LLM 金融推理能力。",
+  "tags": ["benchmark", "ethereum", "defi", "blockchain", "llm"],
+"status": "pending_review",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 1
+}

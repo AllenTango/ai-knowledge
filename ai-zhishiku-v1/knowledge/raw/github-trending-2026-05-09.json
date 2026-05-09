@@ -1,0 +1,227 @@
+{
+  "source": "github-trending",
+  "skill": "github-trending",
+  "collected_at": "2026-05-09T02:00:00Z",
+  "items": [
+    {
+      "name": "ds4",
+      "url": "https://github.com/antirez/ds4",
+      "description": "DeepSeek 4 Flash local inference engine for Metal",
+      "stars": 3111,
+      "language": "C",
+      "topics": [],
+      "summary": "ds4 是 antirez（Redis 作者）开发的 DeepSeek V4 本地推理引擎，专注于 Metal 加速，为 Mac 用户提供高效的本地大模型运行方案。"
+    },
+    {
+      "name": "deepclaude",
+      "url": "https://github.com/aattaran/deepclaude",
+      "description": "Use Claude Code's autonomous agent loop with DeepSeek V4 Pro, OpenRouter, or any Anthropic-compatible backend. Same UX, 17x cheaper.",
+      "stars": 1660,
+      "language": "JavaScript",
+      "topics": [],
+      "summary": "deepclaude 让 Claude Code 的自主 Agent 循环支持 DeepSeek V4 Pro 等后端，同等体验下成本降低 17 倍，适合追求性价比的开发者。"
+    },
+    {
+      "name": "mirage",
+      "url": "https://github.com/strukto-ai/mirage",
+      "description": "A Unified Virtual Filesystem For AI Agents",
+      "stars": 1545,
+      "language": "TypeScript",
+      "topics": [
+        "agent-sandbox",
+        "agent-tools",
+        "ai-agents",
+        "bash",
+        "claude-code",
+        "fuse",
+        "langchain",
+        "llm-agents",
+        "openai-agents",
+        "python",
+        "typescript",
+        "vfs",
+        "virtual-filesystem"
+      ],
+      "summary": "Mirage 为 AI Agent 提供统一的虚拟文件系统，支持多后端工具调用和沙箱隔离，大幅简化 Agent 与复杂文件系统交互的复杂度。"
+    },
+    {
+      "name": "yao-open-prompts",
+      "url": "https://github.com/yaojingang/yao-open-prompts",
+      "description": "Yao Open Prompts：中文 AI 提示词库，覆盖工作、学习、内容、营销和生活场景",
+      "stars": 1433,
+      "language": "Python",
+      "topics": [
+        "ai",
+        "chinese-prompts",
+        "geo",
+        "prompt-engineering",
+        "prompts"
+      ],
+      "summary": "Yao Open Prompts 是中文 AI 提示词库，覆盖工作、学习、内容、营销等场景，帮助用户快速获取高质量提示词提升 AI 产出效率。"
+    },
+    {
+      "name": "tokenspeed",
+      "url": "https://github.com/lightseekorg/tokenspeed",
+      "description": "TokenSpeed is a speed-of-light LLM inference engine.",
+      "stars": 831,
+      "language": "Python",
+      "topics": [
+        "blackwell",
+        "deepseek",
+        "gpt-oss",
+        "kimi",
+        "lightseek",
+        "llm",
+        "minimax",
+        "qwen",
+        "speed-of-light",
+        "tokenspeed"
+      ],
+      "summary": "TokenSpeed 是光速级 LLM 推理引擎，支持 DeepSeek、GPT 等多种模型，聚焦高性能推理优化，适合需要低延迟响应的应用场景。"
+    },
+    {
+      "name": "how-to-train-your-gpt",
+      "url": "https://github.com/raiyanyahya/how-to-train-your-gpt",
+      "description": "Build a modern LLM from scratch. Every line commented. Explained like we are five.",
+      "stars": 773,
+      "language": "Jupyter Notebook",
+      "topics": [
+        "attention-mechanism",
+        "deep-learning",
+        "educational",
+        "from-scratch",
+        "gpt",
+        "language-model",
+        "llama",
+        "llm",
+        "machine-learning",
+        "natural-language-processing",
+        "python",
+        "pytorch",
+        "tokenisation",
+        "transformers",
+        "tutorial"
+      ],
+      "summary": "从零构建现代 GPT 的完整教程，逐行注释讲解，类比生动，适合想深入理解大模型原理的开发者系统学习。"
+    },
+    {
+      "name": "robotics-skills-suite",
+      "url": "https://github.com/jherrodthomas/robotics-skills-suite",
+      "description": "76 audit-ready Claude skills automating the industrial robot, cobot, AMR, ROS2, V&V, AI/ML, and IEC 62443 lifecycle. 38 builder + reviewer pairs anchored to ISO 10218, 13849, 62061, 12100, 9283, 15066, 3691-4, and IEC 62443.",
+      "stars": 507,
+      "language": null,
+      "topics": [
+        "amr",
+        "anthropic",
+        "ce-marking",
+        "claude",
+        "claude-skills",
+        "cobot",
+        "fat-sat",
+        "functional-safety",
+        "iec62061",
+        "iec62443",
+        "industrial-robotics",
+        "iso10218",
+        "iso13849",
+        "iso15066",
+        "machinery-safety",
+        "nav2",
+        "ot-cybersecurity",
+        "robotics",
+        "ros2",
+        "urdf"
+      ],
+      "summary": "76 个 Claude 技能集成的工业机器人自动化套件，覆盖机械臂、AMR、ROS2 等场景，对应 ISO/IEC 多项安全标准。"
+    },
+    {
+      "name": "beautiful-html-templates",
+      "url": "https://github.com/zarazhangrui/beautiful-html-templates",
+      "description": "A library of HTML slide templates designed so any coding agent can pick the right one and produce a beautiful deck on the user's behalf, automatically.",
+      "stars": 501,
+      "language": "HTML",
+      "topics": [],
+      "summary": "HTML 幻灯片模板库，专为编码 Agent 设计，自动生成专业演示文稿，适合需要快速制作 PPT 的 AI 应用场景。"
+    },
+    {
+      "name": "LGBT-Prompt",
+      "url": "https://github.com/JustLikeCheese/LGBT-Prompt",
+      "description": "利用 AI 对 LGBT 弱势群体的 \"同情偏向\" 让他执行原先会被拒绝的请求",
+      "stars": 440,
+      "language": "HTML",
+      "topics": [
+        "jailbreak",
+        "prompt"
+      ],
+      "summary": "探讨 AI 安全边界的实验性提示词，通过情感偏向引导模型执行受限操作，用于红队测试与安全研究参考。"
+    },
+    {
+      "name": "ProgramBench",
+      "url": "https://github.com/facebookresearch/ProgramBench",
+      "description": "Can Language Models Rebuild Programs From Scratch?",
+      "stars": 378,
+      "language": "Python",
+      "topics": [],
+      "summary": "ProgramBench 评估语言模型从零重建程序的能力，探索 LLM 在代码生成与程序推理领域的前沿进展。"
+    },
+    {
+      "name": "chainreason",
+      "url": "https://github.com/joshawome/chainreason",
+      "description": "A benchmark for evaluating LLM reasoning on Ethereum and DeFi tasks",
+      "stars": 361,
+      "language": "Python",
+      "topics": [],
+      "summary": "Chainreason 基准测试 LLM 在以太坊和 DeFi 任务上的推理能力，评估模型在区块链场景下的实用价值。"
+    },
+    {
+      "name": "solidity-cot-auditor",
+      "url": "https://github.com/butthtio/solidity-cot-auditor",
+      "description": "Multi-role chain-of-thought LLM pipeline for Solidity security auditing, layered on top of Slither output.",
+      "stars": 356,
+      "language": "Python",
+      "topics": [],
+      "summary": "Solidity CoT Auditor 基于 Slither 输出构建多层思维链流水线，用 LLM 辅助 Solidity 合约安全审计。"
+    },
+    {
+      "name": "lighthouse-router",
+      "url": "https://github.com/evanphi7/lighthouse-router",
+      "description": "Off-chain DEX route discovery on Solana — pool decoders, multi-hop quoting, and arbitrage cycle detection",
+      "stars": 334,
+      "language": "Rust",
+      "topics": [],
+      "summary": "Lighthouse Router 实现 Solana 链上 DEX 路由发现，支持多跳报价和套利检测，为 DeFi 开发者提供链上数据分析工具。"
+    },
+    {
+      "name": "Photo-agents",
+      "url": "https://github.com/jmerelnyc/Photo-agents",
+      "description": "Autonomous self-evolving agents. Vision-grounded layered memory and self-written skills for LLM agents that operate your computer.",
+      "stars": 322,
+      "language": "Python",
+      "topics": [
+        "agent-memory",
+        "ai-agents",
+        "autonomous-agents",
+        "computer-use",
+        "llm",
+        "photo-agents",
+        "photographic-memory",
+        "python",
+        "self-evolving-agents",
+        "vision-agents"
+      ],
+      "summary": "Photo-agents 是具备视觉能力的多层记忆 Agent 系统，支持自我编写技能，适用于需要操作电脑的复杂 AI 任务。"
+    },
+    {
+      "name": "CodexSaver",
+      "url": "https://github.com/fendouai/CodexSaver",
+      "description": "Make Codex cheaper without making it dumber with DeepSeek.",
+      "stars": 314,
+      "language": "Python",
+      "topics": [
+        "codex",
+        "deepseek"
+      ],
+      "summary": "CodexSaver 通过 DeepSeek 降低 Codex 调用成本同时保持质量，为需要频繁调用代码生成 API 的团队提供经济方案。"
+    }
+  ]
+}

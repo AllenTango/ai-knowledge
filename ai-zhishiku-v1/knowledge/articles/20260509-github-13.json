@@ -1,0 +1,14 @@
+{
+  "id": "a3b4c5d6-e7f8-4a8b-7c8d-9e0f1a2b3c4d5",
+  "title": "Photo-agents: 视觉多层记忆 Agent 系统",
+  "source": "github",
+  "source_url": "https://github.com/jmerelnyc/Photo-agents",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "具备视觉能力的多层记忆 Agent 系统，支持自我编写技能，适用于需要操作电脑的复杂 AI 任务。采用视觉 grounded 多层记忆设计，支持自我编写技能，可作为可操作电脑的自主 Agent，是 Agent 能力边界的重要拓展。",
+  "tags": ["agent", "vision", "memory", "self-evolving", "computer-use"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

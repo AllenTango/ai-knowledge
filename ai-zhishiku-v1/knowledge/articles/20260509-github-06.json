@@ -1,0 +1,14 @@
+{
+  "id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c",
+  "title": "how-to-train-your-gpt: 从零构建现代 GPT 完整教程",
+  "source": "github",
+  "source_url": "https://github.com/raiyanyahya/how-to-train-your-gpt",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "从零构建现代 GPT 的完整教程，逐行注释讲解，覆盖 Attention、Transformer 等核心机制，配套 PyTorch 实现。该项目适合开发者系统学习大模型原理，讲解细致实践性强，有助于降低 LLM 学习门槛。",
+  "tags": ["tutorial", "education", "gpt", "pytorch", "transformer", "llm"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

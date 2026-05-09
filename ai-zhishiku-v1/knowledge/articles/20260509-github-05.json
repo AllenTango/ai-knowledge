@@ -1,0 +1,14 @@
+{
+  "id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b",
+  "title": "tokenspeed: 光速级 LLM 推理引擎",
+  "source": "github",
+  "source_url": "https://github.com/lightseekorg/tokenspeed",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "光速级 LLM 推理引擎，支持 DeepSeek、GPT、Kimi、Qwen、Minimax 等多种模型，聚焦高性能推理优化。该项目定位激进，目标是实现极速推理性能，支持 Blackwell 硬件，前瞻性强，有望改变 LLM 推理性能格局。",
+  "tags": ["inference-engine", "performance", "deepseek", "qwen", "kimi", "benchmark"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

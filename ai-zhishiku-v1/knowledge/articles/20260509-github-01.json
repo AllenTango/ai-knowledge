@@ -1,0 +1,14 @@
+{
+  "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "title": "ds4: Redis 作者开发的 DeepSeek V4 本地推理引擎",
+  "source": "github",
+  "source_url": "https://github.com/antirez/ds4",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "Redis 作者 antirez 开发的 DeepSeek V4 本地推理引擎，专注 Metal 硬件加速，为 Mac 用户提供高效的本地大模型运行方案。该项目充分利用 Apple Silicon 特性，支持 DeepSeek V4 Flash 模型，帮助用户在本地部署大模型，降低推理延迟并减少云服务依赖。",
+  "tags": ["inference-engine", "deepseek", "metal", "mac", "local-deployment"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

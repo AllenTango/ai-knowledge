@@ -1,0 +1,14 @@
+{
+  "id": "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e",
+  "title": "beautiful-html-templates: 编码 Agent 专用 HTML 幻灯片模板库",
+  "source": "github",
+  "source_url": "https://github.com/zarazhangrui/beautiful-html-templates",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "HTML 幻灯片模板库，专为编码 Agent 设计，Agent 可自动选用模板生成专业演示文稿。该项目降低 AI 应用开发门槛，专注演示场景，垂直切入，为需要自动生成 PPT 的 AI 应用提供解决方案。",
+  "tags": ["agent-tools", "html", "presentation", "template"],
+"status": "approved",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}

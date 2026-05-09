@@ -1,0 +1,230 @@
+{
+  "source": "github-trending",
+  "skill": "tech-summary",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "total_items": 15,
+  "score_distribution": {
+    "high": 1,
+    "medium": 11,
+    "low": 3
+  },
+  "trends": {
+    "common_themes": [
+      "DeepSeek 模型生态",
+      "AI Agent 基础设施",
+      "本地化推理引擎",
+      "LLM 成本优化",
+      "智能合约安全审计"
+    ],
+    "new_concepts": [
+      "虚拟文件系统用于 Agent (mirage)",
+      "光速级推理引擎 (tokenspeed)",
+      "视觉多层记忆 Agent (photo-agents)",
+      "多角色思维链安全审计 (solidity-cot-auditor)"
+    ],
+    "category_distribution": {
+      "llm": 5,
+      "agent": 4,
+      "framework": 2,
+      "infrastructure": 2,
+      "security": 2
+    }
+  },
+  "items": [
+    {
+      "name": "ds4",
+      "url": "https://github.com/antirez/ds4",
+      "summary": "Redis 作者开发的 DeepSeek V4 本地推理引擎，专注 Metal 加速，为 Mac 用户提供高效本地大模型运行方案。",
+      "highlights": [
+        "Redis 作者 antirez 亲自开发，代码质量有保障",
+        "专注 Metal 硬件加速，充分利用 Apple Silicon",
+        "支持 DeepSeek V4 Flash 模型，本地部署降低延迟"
+      ],
+      "score": 8,
+      "score_reason": "本地推理需求旺盛，Metal 加速方案填补 Mac 生态空白，落地性强。",
+      "tags": ["inference-engine", "deepseek", "metal", "mac", "local-deployment"]
+    },
+    {
+      "name": "deepclaude",
+      "url": "https://github.com/aattaran/deepclaude",
+      "summary": "让 Claude Code 自主 Agent 循环支持 DeepSeek V4 Pro 等后端，同等体验下成本降低 17 倍。",
+      "highlights": [
+        "复用 Claude Code UX，迁移成本低",
+        "支持 OpenRouter 及任意 Anthropic 兼容后端",
+        "成本降低 17 倍，性价比显著"
+      ],
+      "score": 7,
+      "score_reason": "为开发者提供低成本替代方案，实用性强。",
+      "tags": ["claude", "deepseek", "cost-optimization", "agent", "openrouter"]
+    },
+    {
+      "name": "mirage",
+      "url": "https://github.com/strukto-ai/mirage",
+      "summary": "为 AI Agent 提供统一虚拟文件系统，支持多后端工具调用和沙箱隔离，大幅简化 Agent 文件交互复杂度。",
+      "highlights": [
+        "统一虚拟文件系统，抽象底层复杂度",
+        "支持 LangChain、OpenAI Agents、Claude Code 多后端",
+        "沙箱隔离设计，提升安全性"
+      ],
+      "score": 8,
+      "score_reason": "解决 Agent 文件系统交互痛点，基础设施价值明显。",
+      "tags": ["agent-tools", "vfs", "sandbox", "langchain", "claude-code", "infrastructure"]
+    },
+    {
+      "name": "yao-open-prompts",
+      "url": "https://github.com/yaojingang/yao-open-prompts",
+      "summary": "中文 AI 提示词库，覆盖工作、学习、内容、营销等场景，帮助用户快速获取高质量提示词。",
+      "highlights": [
+        "覆盖多场景中文提示词",
+        "开箱即用，降低使用门槛",
+        "社区维护，持续更新"
+      ],
+      "score": 6,
+      "score_reason": "中文场景有参考价值，但非技术突破。",
+      "tags": ["prompts", "chinese", "prompt-engineering", "resource"]
+    },
+    {
+      "name": "tokenspeed",
+      "url": "https://github.com/lightseekorg/tokenspeed",
+      "summary": "光速级 LLM 推理引擎，支持 DeepSeek、GPT 等多种模型，聚焦高性能推理优化。",
+      "highlights": [
+        "定位光速级推理，性能目标激进",
+        "支持多模型：DeepSeek、GPT、Kimi、Qwen、Minimax",
+        " Blackwell 硬件支持，前瞻性强"
+      ],
+      "score": 9,
+      "score_reason": "高性能推理是 LLM 落地关键，该项目目标明确，有望改变推理性能格局。",
+      "tags": ["inference-engine", "performance", "deepseek", "qwen", "kimi", "benchmark"]
+    },
+    {
+      "name": "how-to-train-your-gpt",
+      "url": "https://github.com/raiyanyahya/how-to-train-your-gpt",
+      "summary": "从零构建现代 GPT 的完整教程，逐行注释讲解，适合开发者系统学习大模型原理。",
+      "highlights": [
+        "逐行注释，讲解细致",
+        "覆盖 Attention、Transformer 等核心机制",
+        "配套 PyTorch 实现，实践性强"
+      ],
+      "score": 7,
+      "score_reason": "高质量教程，降低 LLM 学习门槛。",
+      "tags": ["tutorial", "education", "gpt", "pytorch", "transformer", "llm"]
+    },
+    {
+      "name": "robotics-skills-suite",
+      "url": "https://github.com/jherrodthomas/robotics-skills-suite",
+      "summary": "76 个 Claude 技能集成的工业机器人自动化套件，覆盖机械臂、AMR、ROS2 等场景。",
+      "highlights": [
+        "76 个审计就绪技能，覆盖工业机器人全生命周期",
+        "对标 ISO 10218、IEC 62443 等安全标准",
+        "支持 Nav2、URDF 等机器人框架"
+      ],
+      "score": 6,
+      "score_reason": "垂直领域应用，但与主流 AI/LLM 关联度有限。",
+      "tags": ["robotics", "claude-skills", "ros2", "industrial", "safety"]
+    },
+    {
+      "name": "beautiful-html-templates",
+      "url": "https://github.com/zarazhangrui/beautiful-html-templates",
+      "summary": "HTML 幻灯片模板库，专为编码 Agent 设计，自动生成专业演示文稿。",
+      "highlights": [
+        "Agent 可自动选用模板生成 PPT",
+        "降低 AI 应用开发门槛",
+        "专注演示场景，垂直切入"
+      ],
+      "score": 5,
+      "score_reason": "细分场景工具，实用但非核心技术创新。",
+      "tags": ["agent-tools", "html", "presentation", "template"]
+    },
+    {
+      "name": "LGBT-Prompt",
+      "url": "https://github.com/JustLikeCheese/LGBT-Prompt",
+      "summary": "探讨 AI 安全边界的实验性提示词，通过情感偏向引导模型执行受限操作。",
+      "highlights": [
+        "红队测试参考素材",
+        "探讨 AI 安全对齐边界",
+        "实验性安全研究"
+      ],
+      "score": 4,
+      "score_reason": "安全研究价值有限，偏向 jailbreak 范畴。",
+      "tags": ["security", "prompt-engineering", "jailbreak", "red-team"]
+    },
+    {
+      "name": "ProgramBench",
+      "url": "https://github.com/facebookresearch/ProgramBench",
+      "summary": "评估语言模型从零重建程序的能力，探索 LLM 在代码生成与程序推理领域的前沿进展。",
+      "highlights": [
+        "Facebook Research 发布，权威性有保障",
+        "聚焦程序重建任务，评估 LLM 代码能力",
+        "推动代码智能研究"
+      ],
+      "score": 6,
+      "score_reason": "研究基准有价值，但非直接落地工具。",
+      "tags": ["benchmark", "code-generation", "research", "facebook"]
+    },
+    {
+      "name": "chainreason",
+      "url": "https://github.com/joshawome/chainreason",
+      "summary": "基准测试 LLM 在以太坊和 DeFi 任务上的推理能力，评估模型在区块链场景下的实用价值。",
+      "highlights": [
+        "专注区块链领域，填补细分 benchmark 空白",
+        "覆盖以太坊和 DeFi 任务",
+        "评估 LLM 金融推理能力"
+      ],
+      "score": 6,
+      "score_reason": "垂直领域 benchmark，有学术价值。",
+      "tags": ["benchmark", "ethereum", "defi", "blockchain", "llm"]
+    },
+    {
+      "name": "solidity-cot-auditor",
+      "url": "https://github.com/butthtio/solidity-cot-auditor",
+      "summary": "基于 Slither 输出构建多层思维链流水线，用 LLM 辅助 Solidity 合约安全审计。",
+      "highights": [
+        "多角色思维链设计，模拟真实审计流程",
+        "基于 Slither 静态分析结果",
+        "自动化智能合约安全检测"
+      ],
+      "score": 7,
+      "score_reason": "安全审计是区块链落地关键，该工具提升审计效率。",
+      "tags": ["security", "solidity", "smart-contract", "audit", "chain-of-thought"]
+    },
+    {
+      "name": "lighthouse-router",
+      "url": "https://github.com/evanphi7/lighthouse-router",
+      "summary": "实现 Solana 链上 DEX 路由发现，支持多跳报价和套利检测，为 DeFi 开发者提供数据分析工具。",
+      "highlights": [
+        "专注 Solana 生态",
+        "支持多跳报价和套利检测",
+        "链上数据分析能力"
+      ],
+      "score": 5,
+      "score_reason": "DeFi 工具，但与 AI/LLM 关联度不高。",
+      "tags": ["defi", "solana", "dex", "arbitrage"]
+    },
+    {
+      "name": "Photo-agents",
+      "url": "https://github.com/jmerelnyc/Photo-agents",
+      "summary": "具备视觉能力的多层记忆 Agent 系统，支持自我编写技能，适用于需要操作电脑的复杂 AI 任务。",
+      "highlights": [
+        "视觉 grounded 多层记忆设计",
+        "支持自我编写技能",
+        "可操作电脑的自主 Agent"
+      ],
+      "score": 8,
+      "score_reason": "视觉+记忆+自进化组合创新，Agent 能力边界拓展。",
+      "tags": ["agent", "vision", "memory", "self-evolving", "computer-use"]
+    },
+    {
+      "name": "CodexSaver",
+      "url": "https://github.com/fendouai/CodexSaver",
+      "summary": "通过 DeepSeek 降低 Codex 调用成本同时保持质量，为需要频繁调用代码生成 API 的团队提供经济方案。",
+      "highlights": [
+        "成本优化导向，API 调用费用降低",
+        "DeepSeek 替代方案",
+        "保持代码生成质量"
+      ],
+      "score": 6,
+      "score_reason": "成本优化工具，有实用价值但非技术创新。",
+      "tags": ["codex", "deepseek", "cost-optimization", "api"]
+    }
+  ]
+}

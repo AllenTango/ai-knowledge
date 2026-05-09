@@ -1,0 +1,14 @@
+{
+  "id": "f2a3b4c5-d6e7-4f7a-6b7c-8d9e0f1a2b3c4",
+  "title": "lighthouse-router: Solana 链上 DEX 路由发现工具",
+  "source": "github",
+  "source_url": "https://github.com/evanphi7/lighthouse-router",
+  "fetched_at": "2026-05-09T02:00:00Z",
+  "analyzed_at": "2026-05-09T02:05:00Z",
+  "summary": "实现 Solana 链上 DEX 路由发现，支持多跳报价和套利检测，为 DeFi 开发者提供数据分析工具。专注 Solana 生态，具备链上数据分析能力，支持多跳报价和套利检测功能。",
+  "tags": ["defi", "solana", "dex", "arbitrage"],
+"status": "rejected",
+  "reviewer": "reviewer-agent",
+  "reviewed_at": "2026-05-09T08:00:00Z",
+  "retry_count": 0
+}
