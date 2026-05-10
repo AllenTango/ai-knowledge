@@ -1,0 +1,158 @@
+=== STDOUT ===
+
+============================================================
+Test 1: classify_by_keywords (第一层关键词匹配)
+============================================================
+  [PASS] github项目 -> github_search
+  [PASS] 开源仓库 -> github_search
+  [PASS] RAG repo -> github_search
+  [PASS] repository -> github_search
+  [PASS] trending项目 -> github_search
+  [PASS] git仓库 -> github_search
+  [PASS] 搜索文章 -> knowledge_query
+  [PASS] 查找知识库 -> knowledge_query
+  [PASS] AI相关文章 -> knowledge_query
+  [PASS] 检索RAG -> knowledge_query
+  [PASS] 查一下LangChain -> knowledge_query
+  [PASS] find article -> knowledge_query
+  [PASS] query数据 -> knowledge_query
+  [PASS] 今天天气 -> None (fallthrough)
+  [PASS] 你好 -> None (fallthrough)
+  [PASS] 什么是Agent -> None (fallthrough)
+  [PASS] 空字符串 -> None
+  [PASS] 大小写不敏感: GITHUB项目 -> github_search
+  [PASS] 大小写不敏感: Search知识 -> knowledge_query
+
+============================================================
+Test 2: KEYWORD_MAP 数据结构验证
+============================================================
+  [PASS] KEYWORD_MAP 有 2 种意图
+  [PASS] github_search 有 8 个关键词 -> ['github', 'repo', '仓库', '项目', '开源', 'repository', 'trending', 'git']
+  [PASS] knowledge_query 有 10 个关键词 -> ['知识', '文章', '检索', '搜索', '查找', 'article', 'search', 'find', 'query', '查一下']
+  [PASS] 纯英文关键词均为小写
+  [PASS] 无重复关键词
+
+============================================================
+Test 3: HANDLER_MAP 处理器映射验证
+============================================================
+  [PASS] HANDLER_MAP 有 3 种意图
+  [PASS] github_search 处理器可调用
+  [PASS] knowledge_query 处理器可调用
+  [PASS] general_chat 处理器可调用
+  [PASS] github_search -> handle_github_search
+  [PASS] knowledge_query -> handle_knowledge_query
+  [PASS] general_chat -> handle_general_chat
+  [PASS] github_search 签名 (query: str) -> str 为单参数
+  [PASS] knowledge_query 签名 (query: str) -> str 为单参数
+  [PASS] general_chat 签名 (query: str) -> str 为单参数
+
+============================================================
+Test 4: handle_github_search (GitHub Search API)
+============================================================
+  [PASS] API 请求成功 -> 返回搜索结果 -> 返回 1113 字符
+  结果预览 (1113 chars):
+    找到 115398 个仓库，展示前 5 个：
+    
+      * 136290  langchain-ai/langchain  [Python]
+         The agent engineering platform. Available in TypeScript!
+         https://github.com/langchain-ai/langchain
+    
+      * 122360  microsoft/markitdown  [Python]
+         Python tool for converting files and office documents to Markdown.
+  [PASS] 多词英文搜索 -> 返回 258405 字符
+
+============================================================
+Test 5: handle_knowledge_query (本地知识库检索)
+============================================================
+  [PASS] index.json 为空时返回友好提示
+  输出: 知识库为空，暂无文章。
+
+============================================================
+Test 6: classify_by_llm (LLM 分类兜底)
+============================================================
+  [PASS] LLM 不可用时默认 general_chat
+  [PASS] LLM 不可用时 general_chat (含关键词也LLM走)
+
+============================================================
+Test 7: route() 统一入口
+============================================================
+  [PASS] github项目 -> 返回字符串
+  [PASS] 知识检索 -> 返回字符串
+  [PASS] 空字符串 -> 友好提示 -> '请输入有效的问题。'
+  [PASS] 纯空格 -> 友好提示 -> '请输入有效的问题。'
+  [PASS] route(query) 单参数签名 -> (query: str) -> str
+
+============================================================
+RESULTS: 44 passed, 0 failed
+============================================================
+  [PASS] github项目 -> github_search
+  [PASS] 开源仓库 -> github_search
+  [PASS] RAG repo -> github_search
+  [PASS] repository -> github_search
+  [PASS] trending项目 -> github_search
+  [PASS] git仓库 -> github_search
+  [PASS] 搜索文章 -> knowledge_query
+  [PASS] 查找知识库 -> knowledge_query
+  [PASS] AI相关文章 -> knowledge_query
+  [PASS] 检索RAG -> knowledge_query
+  [PASS] 查一下LangChain -> knowledge_query
+  [PASS] find article -> knowledge_query
+  [PASS] query数据 -> knowledge_query
+  [PASS] 今天天气 -> None (fallthrough)
+  [PASS] 你好 -> None (fallthrough)
+  [PASS] 什么是Agent -> None (fallthrough)
+  [PASS] 空字符串 -> None
+  [PASS] 大小写不敏感: GITHUB项目 -> github_search
+  [PASS] 大小写不敏感: Search知识 -> knowledge_query
+  [PASS] KEYWORD_MAP 有 2 种意图
+  [PASS] github_search 有 8 个关键词 -> ['github', 'repo', '仓库', '项目', '开源', 'repository', 'trending', 'git']
+  [PASS] knowledge_query 有 10 个关键词 -> ['知识', '文章', '检索', '搜索', '查找', 'article', 'search', 'find', 'query', '查一下']
+  [PASS] 纯英文关键词均为小写
+  [PASS] 无重复关键词
+  [PASS] HANDLER_MAP 有 3 种意图
+  [PASS] github_search 处理器可调用
+  [PASS] knowledge_query 处理器可调用
+  [PASS] general_chat 处理器可调用
+  [PASS] github_search -> handle_github_search
+  [PASS] knowledge_query -> handle_knowledge_query
+  [PASS] general_chat -> handle_general_chat
+  [PASS] github_search 签名 (query: str) -> str 为单参数
+  [PASS] knowledge_query 签名 (query: str) -> str 为单参数
+  [PASS] general_chat 签名 (query: str) -> str 为单参数
+  [PASS] API 请求成功 -> 返回搜索结果 -> 返回 1113 字符
+  [PASS] 多词英文搜索 -> 返回 258405 字符
+  [PASS] index.json 为空时返回友好提示
+  [PASS] LLM 不可用时默认 general_chat
+  [PASS] LLM 不可用时 general_chat (含关键词也LLM走)
+  [PASS] github项目 -> 返回字符串
+  [PASS] 知识检索 -> 返回字符串
+  [PASS] 空字符串 -> 友好提示 -> '请输入有效的问题。'
+  [PASS] 纯空格 -> 友好提示 -> '请输入有效的问题。'
+  [PASS] route(query) 单参数签名 -> (query: str) -> str
+
+=== STDERR (logging) ===
+[INFO] 关键词命中: [github_search] ← 'github' in 'github项目...'
+[INFO] 关键词命中: [github_search] ← '仓库' in '开源仓库...'
+[INFO] 关键词命中: [github_search] ← 'repo' in 'RAG repo...'
+[INFO] 关键词命中: [github_search] ← 'repo' in 'repository...'
+[INFO] 关键词命中: [github_search] ← '项目' in 'trending项目...'
+[INFO] 关键词命中: [github_search] ← '仓库' in 'git仓库...'
+[INFO] 关键词命中: [knowledge_query] ← '文章' in '搜索文章...'
+[INFO] 关键词命中: [knowledge_query] ← '知识' in '查找知识库...'
+[INFO] 关键词命中: [knowledge_query] ← '文章' in 'AI相关文章...'
+[INFO] 关键词命中: [knowledge_query] ← '检索' in '检索RAG...'
+[INFO] 关键词命中: [knowledge_query] ← '查一下' in '查一下LangChain...'
+[INFO] 关键词命中: [knowledge_query] ← 'article' in 'find article...'
+[INFO] 关键词命中: [knowledge_query] ← 'query' in 'query数据...'
+[INFO] 关键词命中: [github_search] ← 'github' in 'GITHUB项目...'
+[INFO] 关键词命中: [knowledge_query] ← '知识' in 'Search知识...'
+[WARNING] LLM 分类失败: 环境变量 DEEPSEEK_API_KEY 未设置，默认 general_chat
+[WARNING] LLM 分类失败: 环境变量 DEEPSEEK_API_KEY 未设置，默认 general_chat
+[INFO] 路由请求: github项目
+[INFO] 关键词命中: [github_search] ← 'github' in 'github项目...'
+[INFO] 执行处理器: github_search
+[INFO] 路由请求: 知识检索
+[INFO] 关键词命中: [knowledge_query] ← '知识' in '知识检索...'
+[INFO] 执行处理器: knowledge_query
+
+=== EXIT CODE: 0 ===
