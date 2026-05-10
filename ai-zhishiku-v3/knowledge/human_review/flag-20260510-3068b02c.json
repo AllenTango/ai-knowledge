@@ -1,0 +1,20 @@
+{
+  "flagged_at": "2026-05-10T15:35:24.801050+00:00",
+  "iteration": 3,
+  "review_feedback": "多次审核未通过，技术深度不足",
+  "analyses_count": 1,
+  "analyses": [
+    {
+      "id": "h1",
+      "title": "Human Flag Item",
+      "summary": "测试摘要",
+      "tags": [
+        "test"
+      ],
+      "score": 0.6,
+      "source": "github",
+      "source_url": "http://x.com",
+      "analyzed_at": "2026-05-10T00:00:00Z"
+    }
+  ]
+}
