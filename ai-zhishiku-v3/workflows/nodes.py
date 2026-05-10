@@ -16,6 +16,10 @@ from typing import Any
 
 from workflows.state import KBState
 
+# Security imports
+import sys as _sys
+from tests.security import sanitize_input, filter_output
+
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -176,15 +180,17 @@ def collect_node(state: KBState) -> dict:
             data = json.loads(resp.read().decode("utf-8"))
 
         for item in data.get("items", [])[:per_source_limit]:
+            title, _ = sanitize_input(item.get("full_name", ""))
+            desc, _ = sanitize_input(item.get("description") or "")
             sources.append({
                 "id": str(uuid.uuid4()),
-                "title": item.get("full_name", ""),
+                "title": title,
                 "source": "github",
                 "source_url": item.get("html_url", ""),
                 "fetched_at": datetime.now(timezone.utc).isoformat(),
                 "stars": item.get("stargazers_count", 0),
                 "language": item.get("language") or "unknown",
-                "description": item.get("description") or "",
+                "description": desc,
             })
         logger.info(f"GitHub 采集: {len(sources)} 条")
     except Exception as e:
@@ -196,6 +202,10 @@ def collect_node(state: KBState) -> dict:
         from workflows.collector import fetch_rss_sources
         rss_items = fetch_rss_sources(limit=per_source_limit)
         for item in rss_items:
+            title, _ = sanitize_input(item.get("title", ""))
+            desc, _ = sanitize_input(item.get("description", ""))
+            item["title"] = title
+            item["description"] = desc
             item.setdefault("id", str(uuid.uuid4()))
             item.setdefault("fetched_at", datetime.now(timezone.utc).isoformat())
             item.setdefault("stars", 0)
@@ -262,7 +272,7 @@ def analyze_node(state: KBState) -> dict:
 
         prompt = f"项目: {title}\n描述: {desc}\nURL: {source_url}"
         try:
-            (text, usage) = chat(system=ANALYZE_SYSTEM_PROMPT, prompt=prompt, temperature=0.7)
+            (text, usage) = chat(system=ANALYZE_SYSTEM_PROMPT, prompt=prompt, temperature=0.7, node_name="analyze")
 
             # 提取 JSON
             json_match = re.search(
@@ -363,7 +373,7 @@ def organize_node(state: KBState) -> dict:
                 }, ensure_ascii=False)
 
                 try:
-                    (text, usage) = chat(system=system, prompt=prompt, temperature=0.3)
+                    (text, usage) = chat(system=system, prompt=prompt, temperature=0.3, node_name="organize")
 
                     json_match = re.search(
                         r"```(?:json)?\s*\n?(.*?)\n?```", text, re.DOTALL
@@ -384,6 +394,10 @@ def organize_node(state: KBState) -> dict:
     # Step 4: 格式化为 articles（AGENTS.md 标准格式）
     articles = []
     for item in deduped:
+        summary, _ = filter_output(item.get("summary", ""))
+        tags_str = ", ".join(item.get("tags", []))
+        tags_filtered, _ = filter_output(tags_str)
+        tags = [t.strip() for t in tags_filtered.split(",") if t.strip()]
         article = {
             "id": item.get("id", str(uuid.uuid4())),
             "title": item.get("title", ""),
@@ -391,8 +405,8 @@ def organize_node(state: KBState) -> dict:
             "source_url": item.get("source_url", ""),
             "fetched_at": item.get("fetched_at", ""),
             "analyzed_at": item.get("analyzed_at", ""),
-            "summary": item.get("summary", ""),
-            "tags": item.get("tags", []),
+            "summary": summary,
+            "tags": tags,
             "status": "pending_review",
             "score": item.get("score", 0),
             "reviewer": None,
@@ -515,6 +529,7 @@ def review_node(state: KBState) -> dict[str, Any]:
             prompt=prompt,
             system=REVIEW_SYSTEM_PROMPT,
             temperature=0.1,
+            node_name="review",
         )
 
         tokens = usage.total_tokens
@@ -566,6 +581,23 @@ def review_node(state: KBState) -> dict[str, Any]:
         f"审核完成: passed={all_passed}, iteration={new_iteration}, "
         f"反馈={feedback[:80] if feedback else '(无)'}"
     )
+
+    # LLM-as-Judge（仅 full 策略启用）
+    plan = state.get("plan", {})
+    if plan.get("strategy") == "full":
+        try:
+            from tests.eval_test import judge_score
+            for item in to_review:
+                eval_input = {
+                    "title": item.get("title", ""),
+                    "summary": item.get("summary", ""),
+                    "tags": item.get("tags", []),
+                    "score": item.get("score", 0),
+                }
+                eval_score = judge_score(eval_input)
+                logger.info(f"  LLM-as-Judge: {item.get('title', '?')[:30]} 评分={eval_score}")
+        except Exception as e:
+            logger.warning(f"LLM-as-Judge 失败: {e}")
 
     return {
         "review_passed": all_passed,
@@ -651,6 +683,7 @@ def revise_node(state: KBState) -> dict[str, Any]:
             prompt=prompt,
             system=system,
             temperature=0.4,
+            node_name="revise",
         )
 
         tokens = usage.total_tokens

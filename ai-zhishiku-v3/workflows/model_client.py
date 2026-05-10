@@ -23,15 +23,40 @@ import json
 import logging
 import os
 import re
+import sys
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import httpx
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
+
+# CostGuard 懒加载
+_cost_guard: Any | None = None
+
+
+def get_cost_guard() -> Any:
+    """获取全局 CostGuard 单例（懒加载）。
+
+    第一次调用时创建，后续复用同一实例。
+    budget_yuan 从环境变量 BUDGET_YUAN 读取，默认 1.0。
+
+    Returns:
+        CostGuard 实例。
+    """
+    global _cost_guard
+    if _cost_guard is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+        from tests.cost_guard import CostGuard
+        _cost_guard = CostGuard(
+            budget_yuan=float(os.getenv("BUDGET_YUAN", "1.0"))
+        )
+    return _cost_guard
+
 
 _LLM_AVAILABLE: bool | None = None
 
@@ -517,6 +542,7 @@ def chat(
     system: str = "",
     prompt: str = "",
     provider_name: str = "",
+    node_name: str = "unknown",
     **kwargs,
 ) -> tuple[str, Usage]:
     """便捷聊天函数，返回 (响应文本, 用量) 元组。
@@ -526,6 +552,7 @@ def chat(
         system: 系统提示词，与 prompt 组合使用（当 messages 为 None 时）。
         prompt: 用户提示词，与 system 组合使用（当 messages 为 None 时）。
         provider_name: 提供商名称。
+        node_name: 调用节点名称（用于 CostGuard 追踪），默认 "unknown"。
         **kwargs: 传递给 LLM 的额外参数（如 temperature）。
 
     Returns:
@@ -540,6 +567,14 @@ def chat(
         msgs = messages
 
     response = chat_with_retry(msgs, provider_name=provider_name, **kwargs)
+
+    guardian = get_cost_guard()
+    guardian.record(node_name, {
+        "prompt_tokens": response.usage.prompt_tokens,
+        "completion_tokens": response.usage.completion_tokens,
+    }, model=response.model)
+    guardian.check()
+
     return response.content, response.usage
 
 
@@ -548,17 +583,20 @@ def chat_json(
     system: str = "",
     prompt: str = "",
     provider_name: str = "",
+    node_name: str = "unknown",
     **kwargs,
 ) -> tuple[dict, Usage]:
     """以 JSON 模式调用 LLM，返回 (解析后的 dict, 用量) 元组。
 
     在 system 提示或 user 提示中自动追加 JSON 输出指令。
+    透传 node_name 到 chat()，由 CostGuard 统一记录用量。
 
     Args:
         messages: 完整的消息列表（可选）。与 system+prompt 二选一。
         system: 系统提示词。
         prompt: 用户提示词。
         provider_name: 提供商名称。
+        node_name: 调用节点名称（透传到 chat()），默认 "unknown"。
         **kwargs: 传递给 LLM 的额外参数（如 temperature）。
 
     Returns:
@@ -573,19 +611,21 @@ def chat_json(
             msgs.append({"role": "system", "content": system +
                          "\n\n请始终以 JSON 格式输出，不要包含其他内容。"})
         msgs.append({"role": "user", "content": prompt +
-                     "\n\n请只输出 JSON 格式，不要包含其他内容。"})
+                      "\n\n请只输出 JSON 格式，不要包含其他内容。"})
     else:
         msgs = messages
 
-    response = chat_with_retry(msgs, provider_name=provider_name, **kwargs)
-    text = response.content.strip()
+    text, usage = chat(
+        messages=msgs, provider_name=provider_name,
+        node_name=node_name, **kwargs,
+    )
 
     json_match = re.search(r"```(?:json)?\s*\n?(.*?)\n?```", text, re.DOTALL)
     if json_match:
         text = json_match.group(1)
 
     parsed = json.loads(text)
-    return parsed, response.usage
+    return parsed, usage
 
 
 if __name__ == "__main__":
