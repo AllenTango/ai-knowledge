@@ -1,0 +1,29 @@
+{
+  "id": "2dcc2a5b-4905-46dc-ac6b-426aa965af1a",
+  "source": "github",
+  "source_url": "https://github.com/obra/superpowers",
+  "title": "obra/superpowers",
+  "content": "An agentic skills framework & software development methodology that works.",
+  "fetched_at": "2026-05-10T11:31:38.215092+00:00",
+  "stars": 184810,
+  "language": "Shell",
+  "topics": [],
+  "summary": "该项目「obra/superpowers」是一个用于构建智能体（Agent）的技能框架与软件开发方法论。它提出了一套系统化的方法，使AI代理能够高效地获取、组合和运用特定技能来完成任务，从而突破当前LLM在工具使用和任务编排上的局限性。其重要性在于：它为开发者提供了一种可复用的、结构化的范式，将AI能力从单次对话扩展为持续、协作的工作流程，是推动Agent从原型走向落地的关键基础设施。与AI领域关联紧密，直接针对当前多智能体协作、工具增强型AI等核心痛点。",
+  "tags": [
+    "agent-framework",
+    "skills-framework",
+    "software-development-methodology",
+    "llm-agents",
+    "ai-tooling",
+    "programming-framework"
+  ],
+  "score": 7.8,
+  "relevant": true,
+  "analyzed_at": "2026-05-10T11:31:48.161064+00:00",
+  "model_provider": "deepseek",
+  "status": "pending_review",
+  "retry_count": 0,
+  "published_to": [],
+  "reviewer": null,
+  "reviewed_at": null
+}

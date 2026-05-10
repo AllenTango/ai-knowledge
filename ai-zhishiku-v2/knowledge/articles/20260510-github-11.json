@@ -1,0 +1,37 @@
+{
+  "id": "af0782d9-1541-4a35-8874-1bc301011c63",
+  "source": "github",
+  "source_url": "https://github.com/langflow-ai/langflow",
+  "title": "langflow-ai/langflow",
+  "content": "Langflow is a powerful tool for building and deploying AI-powered agents and workflows.",
+  "fetched_at": "2026-05-10T11:31:38.215172+00:00",
+  "stars": 147917,
+  "language": "Python",
+  "topics": [
+    "agents",
+    "chatgpt",
+    "generative-ai",
+    "large-language-models",
+    "multiagent",
+    "react-flow"
+  ],
+  "summary": "Langflow 是一个用于构建和部署 AI 驱动的智能体（Agent）及工作流（Workflow）的可视化开发工具。它的重要性在于降低了 AI 应用开发的门槛，使开发者无需深入编码即可通过拖拽方式集成 LLM、向量数据库、工具调用等功能，快速实现复杂 AI 流水线的原型设计与生产部署。与 AI 领域紧密相关，它专注于 LLM 编排、Agent 构建和人机交互工作流，是当前低代码/无代码 AI 开发趋势的代表项目之一。",
+  "tags": [
+    "ai-agents",
+    "workflow",
+    "low-code",
+    "llm-orchestration",
+    "visual-programming",
+    "open-source",
+    "langflow"
+  ],
+  "score": 8.8,
+  "relevant": true,
+  "analyzed_at": "2026-05-10T11:32:15.358658+00:00",
+  "model_provider": "deepseek",
+  "status": "pending_review",
+  "retry_count": 0,
+  "published_to": [],
+  "reviewer": null,
+  "reviewed_at": null
+}

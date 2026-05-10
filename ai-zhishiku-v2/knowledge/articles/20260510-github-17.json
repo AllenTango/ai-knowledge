@@ -1,0 +1,30 @@
+{
+  "id": "97954fd8-80a0-433b-a093-ef5f92a01f63",
+  "source": "github",
+  "source_url": "https://github.com/anthropics/skills",
+  "title": "anthropics/skills",
+  "content": "Public repository for Agent Skills",
+  "fetched_at": "2026-05-10T11:31:38.215235+00:00",
+  "stars": 131368,
+  "language": "Python",
+  "topics": [
+    "agent-skills"
+  ],
+  "summary": "Anthropics 在 GitHub 上发布了一个名为 `skills` 的公开仓库，该仓库用于存放 Agent Skills（智能体技能）相关内容。这个仓库的重要性在于，它为 AI 代理（Agent）提供了可复用的能力模块，帮助智能体在实际任务中更高效地执行特定操作。这与 AI 领域中的 Agent 开发紧密相关，特别是提升智能体在工具使用、任务分解和交互执行方面的能力。",
+  "tags": [
+    "agent-skills",
+    "github-repository",
+    "ai-agents",
+    "anthropics",
+    "tool-use"
+  ],
+  "score": 6.5,
+  "relevant": true,
+  "analyzed_at": "2026-05-10T11:32:34.029630+00:00",
+  "model_provider": "deepseek",
+  "status": "pending_review",
+  "retry_count": 0,
+  "published_to": [],
+  "reviewer": null,
+  "reviewed_at": null
+}
