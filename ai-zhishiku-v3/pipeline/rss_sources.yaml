@@ -1,0 +1,104 @@
+# AI 知识库 RSS 数据源配置
+#
+# 使用说明:
+#   - enabled: true  表示开启采集
+#   - enabled: false 表示关闭采集
+#   - 量大的源默认关闭，需人工确认后开启
+
+sources:
+  # ========================================
+  # 综合技术
+  # ========================================
+  - name: "Hacker News Best (AI)"
+    url: "https://hnrss.org/best?q=AI+OR+LLM+OR+machine+learning"
+    category: "comprehensive"
+    enabled: true
+    description: "Hacker News 热门条目（AI 相关关键词过滤）"
+
+  - name: "Lobsters AI/ML"
+    url: "https://lobste.rs/tags/ai.rss"
+    category: "comprehensive"
+    enabled: false
+    description: "Lobsters AI/ML 标签热门"
+
+  # ========================================
+  # AI 研究
+  # ========================================
+  - name: "arXiv cs.AI"
+    url: "https://rss.arxiv.org/rss/cs.AI"
+    category: "research"
+    enabled: false
+    description: "arXiv 人工智能论文章节（每日更新量大，建议按需开启）"
+
+  - name: "arXiv cs.LG"
+    url: "https://rss.arxiv.org/rss/cs.LG"
+    category: "research"
+    enabled: false
+    description: "arXiv 机器学习论文章节（每日更新量大，建议按需开启）"
+
+  # ========================================
+  # 公司博客
+  # ========================================
+  - name: "OpenAI Blog"
+    url: "https://openai.com/blog/rss.xml"
+    category: "company"
+    enabled: true
+    description: "OpenAI 官方博客"
+
+  - name: "Anthropic Research"
+    url: "https://www.anthropic.com/research.rss"
+    category: "company"
+    enabled: true
+    description: "Anthropic 研究博客"
+
+  - name: "Hugging Face Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    category: "company"
+    enabled: true
+    description: "Hugging Face 官方博客"
+
+  - name: "Google DeepMind"
+    url: "https://deepmind.google/blog/rss.xml"
+    category: "company"
+    enabled: true
+    description: "Google DeepMind 博客"
+
+  - name: "Meta AI Blog"
+    url: "https://ai.meta.com/blog/rss/"
+    category: "company"
+    enabled: false
+    description: "Meta AI 博客（更新频率高）"
+
+  # ========================================
+  # 中文社区
+  # ========================================
+  - name: "机器之心"
+    url: "https://rss.aminer.org/rss?type=ai"
+    category: "chinese"
+    enabled: false
+    description: "机器之心 RSS（需确认可用性）"
+
+  - name: "量子位"
+    url: "https://www.qbitai.com/feed"
+    category: "chinese"
+    enabled: false
+    description: "量子位 RSS（需确认可用性）"
+
+# ========================================
+# 配置说明
+# ========================================
+config:
+  # 默认采集间隔（分钟）
+  default_interval: 60
+
+  # 每批最大采集条数
+  max_per_batch: 20
+
+  # 是否启用去重（基于 URL）
+  deduplication: true
+
+  # 去重时间窗口（小时）
+  dedup_window_hours: 48
+
+  # 是否启用 AI 过滤（非 AI 相关条目自动跳过）
+  ai_filter: true
