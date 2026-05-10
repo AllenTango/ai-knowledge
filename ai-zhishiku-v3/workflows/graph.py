@@ -1,73 +1,91 @@
 """LangGraph 知识库工作流 — 图定义与条件边。
 
-使用 langgraph.graph.StateGraph 构建 collect → analyze → organize → review → save 工作流，
-review 之后通过条件边分支：
-  - True  → save  → END
-  - False → organize（回到整理节点，用 LLM 再次修正）
+工作流节点：
+  collect → analyze → organize → review
+                                    │
+                        decide_next:
+                          - review_passed=True → save → END
+                          - review_passed=False & iteration<2 → revise → organize
+                          - review_passed=False & iteration>=2 → human_flag → END
 """
 
 import logging
 
-from langgraph.graph import StateGraph, END                         # 需求 1
+from langgraph.graph import StateGraph, END
 
-from workflows.state import KBState                                  # 需求 3
-from workflows.nodes import (                                        # 需求 2
+from workflows.state import KBState
+from workflows.nodes import (
     collect_node,
     analyze_node,
     organize_node,
     review_node,
+    revise_node,
     save_node,
+    human_flag_node,
+    MAX_ITERATIONS,
 )
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 
-def decide_next(state: KBState) -> str:
-    """条件边：review 之后根据 review_passed 分支。
+def route_after_review(state: KBState) -> str:
+    """条件边：review 之后根据 review_passed 和 iteration 三分支路由。
 
     Args:
         state: KBState 当前状态。
 
     Returns:
-        "save" — 流向保存节点 → END
-        "organize" — 回到整理节点修正（携带 review_feedback）
+        "organize"    — review_passed=True，通过审核
+        "revise"      — review_passed=False 且 iteration < 3，修正后重新审核
+        "human_flag"  — review_passed=False 且 iteration >= 3，需人工判断
     """
-    return "save" if state.get("review_passed", False) else "organize"
+    if state.get("review_passed", False):
+        return "organize"
+
+    iteration = state.get("iteration", 0)
+    if iteration >= MAX_ITERATIONS:
+        logger.info(f"iteration={iteration} >= 3，进入人工标记")
+        return "human_flag"
+
+    return "revise"
 
 
 def build_graph():
     """构建并编译知识库工作流图。
 
     Returns:
-        CompiledGraph — 可调用 .invoke(initial_state) 执行。  # 需求 7
+        CompiledStateGraph — 可调用 .invoke(initial_state) 执行。
     """
     workflow = StateGraph(KBState)
 
-    # 添加 5 个节点
     workflow.add_node("collect", collect_node)
     workflow.add_node("analyze", analyze_node)
     workflow.add_node("organize", organize_node)
     workflow.add_node("review", review_node)
+    workflow.add_node("revise", revise_node)
     workflow.add_node("save", save_node)
+    workflow.add_node("human_flag", human_flag_node)
 
-    # 入口点（需求 6）
     workflow.set_entry_point("collect")
 
-    # 线性边（需求 4）
     workflow.add_edge("collect", "analyze")
     workflow.add_edge("analyze", "organize")
     workflow.add_edge("organize", "review")
 
-    # 条件边（需求 5）
     workflow.add_conditional_edges(
         "review",
-        decide_next,
+        route_after_review,
         {
-            "save": "save",
             "organize": "organize",
+            "revise": "revise",
+            "human_flag": "human_flag",
         },
     )
+
+    workflow.add_edge("organize", "save")
+    workflow.add_edge("revise", "review")
     workflow.add_edge("save", END)
+    workflow.add_edge("human_flag", END)
 
     return workflow.compile()

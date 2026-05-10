@@ -69,3 +69,11 @@ class KBState(TypedDict):
                          "organize": int, "review": int, "save": int}}
     各节点执行完毕后累积自己的用量到此报告，供最终审计。
     """
+
+    needs_human_review: bool
+    """是否需要人工审核。
+    当 review_passed=False 且 iteration 超过上限时由 human_flag_node 写入 True。
+    为 True 时条目不写入主知识库（knowledge/articles/），
+    而是写入待人工审核目录（knowledge/human_review/）。
+    流程终结，不再流向 save。
+    """

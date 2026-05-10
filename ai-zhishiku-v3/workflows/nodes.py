@@ -494,6 +494,116 @@ def review_node(state: KBState) -> dict[str, Any]:
 
 
 # ═══════════════════════════════════════════════════════════════════
+# 节点 4.5: revise_node — LLM 注入 feedback 改写 analyses
+# ═══════════════════════════════════════════════════════════════════
+
+REVISE_SYSTEM_PROMPT = """你是一个知识库内容修正员。
+请根据审核反馈，对以下分析条目进行修正。
+
+审核反馈（来自质量审核员）：
+{feedback}
+
+请逐条修正，输出 JSON：
+{{
+    "revised": [
+        {{
+            "id": "条目id（不可修改）",
+            "summary": "修正后的中文摘要",
+            "tags": ["修正后的标签"],
+            "score": 0.85
+        }},
+        ...
+    ]
+}}
+
+规则：
+- id 字段不可修改，只修正 summary/tags/score
+- 如果 feedback 中没有提到某条目，保持原样
+- 只输出 JSON，不要包含其他内容"""
+
+
+def revise_node(state: KBState) -> dict[str, Any]:
+    """修正节点：根据 review_feedback 注入改写 analyses。
+
+    读取 state["analyses"] 和 state["review_feedback"]，
+    将 feedback 注入 LLM prompt，批量修正后返回新的 analyses。
+
+    Args:
+        state: KBState。
+
+    Returns:
+        dict: 包含 analyses（改进后）和 cost_tracker。
+    """
+    logger.info("--- revise_node ---")
+
+    analyses = state.get("analyses", [])
+    feedback = state.get("review_feedback", "")
+
+    if not analyses or not feedback:
+        logger.info("analyses 或 feedback 为空，跳过修正")
+        return {}
+
+    from workflows.model_client import chat_json, check_llm_available
+
+    if not check_llm_available():
+        logger.warning("LLM 不可用，跳过修正")
+        return {}
+
+    provider = os.getenv("LLM_PROVIDER", "deepseek")
+
+    prompt_lines = []
+    for item in analyses[:5]:
+        prompt_lines.append(
+            f"id: {item.get('id', 'unknown')}\n"
+            f"title: {item.get('title', '')}\n"
+            f"summary: {item.get('summary', '')}\n"
+            f"tags: {item.get('tags', [])}\n"
+            f"score: {item.get('score', 0)}\n---"
+        )
+    prompt = "\n".join(prompt_lines)
+
+    system = REVISE_SYSTEM_PROMPT.format(feedback=feedback)
+
+    try:
+        parsed, usage = chat_json(
+            prompt=prompt,
+            system=system,
+            temperature=0.4,
+        )
+
+        tokens = usage.total_tokens
+        cost_tracker = _merge_cost(
+            dict(state.get("cost_tracker", {})), tokens, provider, "revise"
+        )
+
+        revised_list = parsed.get("revised", [])
+        if not revised_list:
+            logger.warning("LLM 未返回 revised 列表，跳过修正")
+            return {}
+
+        revised_map = {r.get("id"): r for r in revised_list if r.get("id")}
+        improved = []
+        for item in analyses:
+            item_id = item.get("id")
+            if item_id in revised_map:
+                revised_item = dict(item)
+                revised_item["summary"] = revised_map[item_id].get("summary", item.get("summary", ""))
+                revised_item["tags"] = revised_map[item_id].get("tags", item.get("tags", []))
+                revised_item["score"] = revised_map[item_id].get("score", item.get("score", 0))
+                improved.append(revised_item)
+                logger.info(f"  修正: {item.get('title', '?')[:35]}")
+            else:
+                improved.append(item)
+
+        logger.info(f"修正完成: {len(improved)} 条")
+        return {"analyses": improved, "cost_tracker": cost_tracker}
+
+    except Exception as e:
+        logger.warning(f"修正失败: {e}，返回原 analyses")
+        return {"analyses": analyses, "cost_tracker": dict(state.get("cost_tracker", {}))}
+
+
+# ═══════════════════════════════════════════════════════════════════
 # 节点 5: save_node — 写入 knowledge/articles/
 # ═══════════════════════════════════════════════════════════════════
 
@@ -535,4 +645,52 @@ def save_node(state: KBState) -> dict:
         logger.info(f"  已保存: {filename}")
 
     logger.info(f"保存完成: {saved} 篇")
+    return {}
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 节点 6: human_flag_node — 人工标记（循环出口）
+# ═══════════════════════════════════════════════════════════════════
+
+HUMAN_FLAG_DIR = PROJECT_ROOT / "knowledge" / "human_review"
+MAX_ITERATIONS = 3
+
+
+def human_flag_node(state: KBState) -> dict[str, Any]:
+    """人工标记节点：超过最大循环次数仍未通过，将问题条目写入独立目录。
+
+    当 review_passed 持续为 False 且 iteration 超过上限时，
+    说明问题不在"质量"而在"数据本身"，需要人工介入判断。
+    将当前 analyses 和 review_feedback 写入待人工审核目录，不污染主知识库。
+
+    Args:
+        state: KBState。
+
+    Returns:
+        dict: 空更新（图终止）。
+    """
+    logger.info("--- human_flag_node ---")
+
+    analyses = state.get("analyses", [])
+    feedback = state.get("review_feedback", "")
+    iteration = state.get("iteration", 0)
+
+    HUMAN_FLAG_DIR.mkdir(parents=True, exist_ok=True)
+    date_str = datetime.now(timezone.utc).strftime("%Y%m%d")
+    flag_file = HUMAN_FLAG_DIR / f"flag-{date_str}-{uuid.uuid4().hex[:8]}.json"
+
+    flag_data = {
+        "flagged_at": datetime.now(timezone.utc).isoformat(),
+        "iteration": iteration,
+        "review_feedback": feedback,
+        "analyses_count": len(analyses),
+        "analyses": analyses,
+    }
+
+    with open(flag_file, "w", encoding="utf-8") as f:
+        json.dump(flag_data, f, ensure_ascii=False, indent=2)
+
+    logger.info(f"人工标记: {flag_file.name}，{len(analyses)} 条条目")
+    logger.info(f"反馈: {feedback[:120] if feedback else '(无)'}...")
+
     return {}
