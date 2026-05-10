@@ -69,6 +69,6 @@ jobs:
           COUNT=$(git diff --name-only --diff-filter=A HEAD -- knowledge/articles/ | wc -l)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ai-zhishiku-v2/knowledge/
+          git add knowledge/
           git commit -m "chore(knowledge): daily collect ${COUNT} articles on ${DATE}"
           git push
