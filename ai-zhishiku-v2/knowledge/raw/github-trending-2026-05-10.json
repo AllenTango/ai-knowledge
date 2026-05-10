@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cf3fa1ce-584a-4a8b-856d-6e711686042e",
+    "source": "github",
+    "source_url": "https://github.com/openclaw/openclaw",
+    "title": "openclaw/openclaw",
+    "content": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
+    "fetched_at": "2026-05-10T10:37:11.242267+00:00",
+    "stars": 370368,
+    "language": "TypeScript",
+    "topics": [
+      "ai",
+      "assistant",
+      "crustacean",
+      "molty",
+      "openclaw",
+      "own-your-data",
+      "personal"
+    ],
+    "summary": "OpenClaw 是一个开源的个性化AI助手项目，强调跨平台兼容性（任意操作系统和平台）。它以「龙虾方式」为比喻，可能代表灵活、自适应的交互体验。该项目之所以重要，是因为它致力于让用户拥有个人专属的AI助手，打破平台限制，提供高度定制化服务。与AI领域关联紧密，聚焦于通用AI助手的开发，类似于开源版的Siri或Alexa，强调隐私和数据主权。",
+    "tags": [
+      "open-source",
+      "ai-assistant",
+      "cross-platform",
+      "personal-assistant",
+      "customizable",
+      "privacy-focused"
+    ],
+    "score": 7.5,
+    "relevant": true,
+    "analyzed_at": "2026-05-10T10:37:14.773064+00:00",
+    "model_provider": "deepseek",
+    "status": "pending_review",
+    "retry_count": 0,
+    "published_to": [],
+    "reviewer": null,
+    "reviewed_at": null
+  }
+]

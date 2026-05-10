@@ -1,0 +1,35 @@
+# =============================================================================
+# 知识库自动化采集 —— Linux/Mac crontab 配置
+#
+# 安装方法:
+#   crontab crontab.txt        # 安装（覆盖现有）
+#   crontab -l >> crontab.txt  # 追加到现有配置后
+#   crontab -e                 # 手动编辑
+#
+# 注意:
+#   - 脚本路径需替换为实际绝对路径
+#   - 建议先手动执行一次脚本验证路径正确
+# =============================================================================
+
+# 每天 UTC 08:00 (北京时间 16:00) 执行
+# 语法: 分 时 日 月 周 命令
+0 8 * * * /home/user/projects/ai-zhishiku/scheduler/run_pipeline.sh >> /home/user/projects/ai-zhishiku/logs/cron.log 2>&1
+
+# =============================================================================
+# 其他可用调度示例（按需取消注释）:
+# =============================================================================
+
+# 每 6 小时执行一次
+# 0 */6 * * * /home/user/projects/ai-zhishiku/scheduler/run_pipeline.sh
+
+# 每天 UTC 00:00 和 12:00 各执行一次
+# 0 0,12 * * * /home/user/projects/ai-zhishiku/scheduler/run_pipeline.sh
+
+# 仅采集 GitHub，每天 UTC 08:00
+# 0 8 * * * SOURCES=github LIMIT=10 /home/user/projects/ai-zhishiku/scheduler/run_pipeline.sh
+
+# =============================================================================
+# 日志查看:
+#   tail -f logs/collect_history.log    # 追踪汇总日志
+#   ls -lt logs/collect_*.log | head    # 查看最近日志文件
+# =============================================================================
