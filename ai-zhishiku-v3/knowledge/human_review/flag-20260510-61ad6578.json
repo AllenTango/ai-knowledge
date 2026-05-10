@@ -1,0 +1,20 @@
+{
+  "flagged_at": "2026-05-10T16:07:31.030290+00:00",
+  "iteration": 1,
+  "review_feedback": "",
+  "analyses_count": 1,
+  "analyses": [
+    {
+      "id": "l1",
+      "title": "Lite Item",
+      "summary": "测试",
+      "tags": [
+        "test"
+      ],
+      "score": 0.5,
+      "source": "github",
+      "source_url": "http://x.com",
+      "analyzed_at": "2026-05-10T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "flagged_at": "2026-05-10T16:07:31.016293+00:00",
+  "iteration": 3,
+  "review_feedback": "[a1] 加权总分=3.8，低分维度: summary_quality=4, technical_depth=3, relevance=5, originality=4, formatting=3",
+  "analyses_count": 1,
+  "analyses": [
+    {
+      "id": "a1",
+      "title": "Test C",
+      "summary": "修正",
+      "tags": [
+        "a"
+      ],
+      "score": 0.6,
+      "source": "github",
+      "source_url": "http://x.com",
+      "analyzed_at": "2026-05-10T00:00:00Z"
+    }
+  ]
+}
