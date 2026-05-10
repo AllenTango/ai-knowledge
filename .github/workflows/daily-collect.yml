@@ -55,7 +55,7 @@ jobs:
           NEW_FILES=$(git diff --name-only --diff-filter=A HEAD -- knowledge/articles/ | wc -l)
           echo "new_count=$NEW_FILES" >> $GITHUB_OUTPUT
 
-          if git diff --quiet HEAD -- ai-zhishiku-v2/knowledge/; then
+          if git diff --quiet HEAD -- knowledge/; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "No new articles to commit."
           else
