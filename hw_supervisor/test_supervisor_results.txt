@@ -1,0 +1,112 @@
+=== STDOUT ===
+
+============================================================
+Test 0: LLM 可用性检查
+============================================================
+  [SKIP] LLM 不可用 - 将跳过调 LLM 的测试 -> 未配置 API Key
+  [PASS] 无 LLM 时返回友好提示
+  [PASS] attempts=0
+
+============================================================
+Test 1: supervisor() 函数签名
+============================================================
+  [PASS] 参数包含 task
+  [PASS] 参数包含 max_retries
+  [PASS] task 为第一个参数
+  [PASS] max_retries 默认值为 3
+  [PASS] supervisor 参数数量为 2
+  [PASS] 返回值标注为 dict[str, Any]
+
+============================================================
+Test 2: 返回值结构
+============================================================
+  [PASS] 包含 output 字段
+  [PASS] 包含 attempts 字段
+  [PASS] 包含 final_score 字段
+  [PASS] output 为字符串
+  [PASS] attempts 为整数
+  [PASS] final_score 为整数
+
+============================================================
+Test 3: 边界情况
+============================================================
+  [PASS] 空字符串 -> attempts=0
+  [PASS] 空字符串 -> output 非空
+  [PASS] 纯空格 -> attempts=0
+  [PASS] 自定义 max_retries=5 不报错
+
+============================================================
+Test 4: 内部函数签名
+============================================================
+  [PASS] _call_worker 存在且可调用
+  [PASS] _call_supervisor 存在且可调用
+
+============================================================
+Test 5: 提示词完整性
+============================================================
+  [PASS] Worker 提示词非空
+  [PASS] Supervisor 提示词非空
+  [PASS] Worker 提示词含 JSON 输出要求
+  [PASS] Supervisor 提示词含准确性维度
+  [PASS] Supervisor 提示词含深度维度
+  [PASS] Supervisor 提示词含格式维度
+  [PASS] Worker 提示词含 title/summary/analysis/conclusion
+
+============================================================
+Test 6: 通过阈值
+============================================================
+  [PASS] PASS_THRESHOLD = 21
+  [PASS] PASS_THRESHOLD 在 18~27 之间（合理范围）
+
+============================================================
+Test 7: CLI 入口
+============================================================
+  [PASS] --help 返回代码 0
+  [PASS] --help 包含用法说明
+  [PASS] CLI 调用 supervisor 不崩溃
+  [PASS] CLI 输出包含 supervisor 结果
+
+============================================================
+RESULTS: 33 passed, 0 failed, 1 skipped
+============================================================
+  [SKIP] LLM 不可用 - 将跳过调 LLM 的测试 -> 未配置 API Key
+  [PASS] 无 LLM 时返回友好提示
+  [PASS] attempts=0
+  [PASS] 参数包含 task
+  [PASS] 参数包含 max_retries
+  [PASS] task 为第一个参数
+  [PASS] max_retries 默认值为 3
+  [PASS] supervisor 参数数量为 2
+  [PASS] 返回值标注为 dict[str, Any]
+  [PASS] 包含 output 字段
+  [PASS] 包含 attempts 字段
+  [PASS] 包含 final_score 字段
+  [PASS] output 为字符串
+  [PASS] attempts 为整数
+  [PASS] final_score 为整数
+  [PASS] 空字符串 -> attempts=0
+  [PASS] 空字符串 -> output 非空
+  [PASS] 纯空格 -> attempts=0
+  [PASS] 自定义 max_retries=5 不报错
+  [PASS] _call_worker 存在且可调用
+  [PASS] _call_supervisor 存在且可调用
+  [PASS] Worker 提示词非空
+  [PASS] Supervisor 提示词非空
+  [PASS] Worker 提示词含 JSON 输出要求
+  [PASS] Supervisor 提示词含准确性维度
+  [PASS] Supervisor 提示词含深度维度
+  [PASS] Supervisor 提示词含格式维度
+  [PASS] Worker 提示词含 title/summary/analysis/conclusion
+  [PASS] PASS_THRESHOLD = 21
+  [PASS] PASS_THRESHOLD 在 18~27 之间（合理范围）
+  [PASS] --help 返回代码 0
+  [PASS] --help 包含用法说明
+  [PASS] CLI 调用 supervisor 不崩溃
+  [PASS] CLI 输出包含 supervisor 结果
+
+=== STDERR (logging) ===
+[WARNING] LLM 不可用（未配置 API Key）
+[WARNING] LLM 不可用（未配置 API Key）
+[WARNING] LLM 不可用（未配置 API Key）
+
+=== EXIT CODE: 0 ===
