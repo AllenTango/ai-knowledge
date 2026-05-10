@@ -1,0 +1,10 @@
+{
+  "id": "test-006-empty-tags",
+  "title": "失败测试：标签为空列表",
+  "source": "github",
+  "source_url": "https://github.com/test/repo",
+  "summary": "这是一个测试文件，用于验证校验脚本能否正确检测空标签列表。内容需要足够长以满足 50 字要求。",
+  "tags": [],
+  "status": "pending_review",
+  "score": 7.5
+}

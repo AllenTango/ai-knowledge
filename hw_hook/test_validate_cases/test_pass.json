@@ -1,0 +1,10 @@
+{
+  "id": "test-001-pass",
+  "title": "通过测试：LangChain v0.3 发布",
+  "source": "github",
+  "source_url": "https://github.com/langchain-ai/langchain/releases/tag/v0.3.0",
+  "summary": "LangChain 发布 v0.3，重点改进了 LangGraph 工作流编排能力，增强了多 Agent 协作支持，并优化了向量数据库集成。该版本是自 v0.2 以来的重大更新，修复了大量已知问题，提升了生产环境稳定性。",
+  "tags": ["langchain", "release", "llm-framework"],
+  "status": "pending_review",
+  "score": 8.5
+}

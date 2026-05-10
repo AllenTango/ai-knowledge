@@ -1,0 +1,10 @@
+{
+  "id": "test-004-bad-url",
+  "title": "失败测试：无效的 URL 格式",
+  "source": "github",
+  "source_url": "ftp://ftp.test.com/file",
+  "summary": "这是一个测试文件，用于验证校验脚本能否正确检测无效的 URL 格式。内容需要足够长以满足 50 字要求。",
+  "tags": ["test"],
+  "status": "pending_review",
+  "score": 7.5
+}

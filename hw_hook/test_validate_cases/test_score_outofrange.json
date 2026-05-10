@@ -1,0 +1,10 @@
+{
+  "id": "test-007-score-outofrange",
+  "title": "失败测试：score 超出范围",
+  "source": "github",
+  "source_url": "https://github.com/test/repo",
+  "summary": "这是一个测试文件，用于验证校验脚本能否正确检测超范围的 score 值。内容需要足够长以满足 50 字要求。",
+  "tags": ["test"],
+  "status": "pending_review",
+  "score": 15.0
+}

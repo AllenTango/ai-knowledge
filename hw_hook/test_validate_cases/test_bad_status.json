@@ -1,0 +1,10 @@
+{
+  "id": "test-003-bad-status",
+  "title": "失败测试：无效的 status 值",
+  "source": "github",
+  "source_url": "https://github.com/test/repo",
+  "summary": "这是一个测试文件，用于验证校验脚本能否正确检测非法的 status 值。内容需要足够长以满足 50 字要求。",
+  "tags": ["test"],
+  "status": "invalid_status",
+  "score": 7.5
+}
