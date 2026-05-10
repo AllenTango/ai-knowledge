@@ -1,0 +1,39 @@
+{
+  "id": "35043edf-1143-4f3b-93fb-74a67e7fcf89",
+  "source": "github",
+  "source_url": "https://github.com/affaan-m/everything-claude-code",
+  "title": "affaan-m/everything-claude-code",
+  "content": "The agent harness performance optimization system. Skills, instincts, memory, security, and research-first development for Claude Code, Codex, Opencode, Cursor and beyond.",
+  "fetched_at": "2026-05-10T11:31:38.215113+00:00",
+  "stars": 177270,
+  "language": "JavaScript",
+  "topics": [
+    "ai-agents",
+    "anthropic",
+    "claude",
+    "claude-code",
+    "developer-tools",
+    "llm",
+    "mcp",
+    "productivity"
+  ],
+  "summary": "这是一个名为「everything-claude-code」的Agent性能优化系统，旨在提升Claude Code、Codex、OpenCode、Cursor等AI编程助手的技能、直觉、记忆、安全性和研究优先开发能力。它是一个为AI Agent设计的完整工具集，通过模块化架构解决Agent在复杂编程任务中的效率与可靠性问题。与AI领域关联紧密，直接关注LLM Agent在实际开发场景中的表现优化，体现了从模型能力到工程落地的关键进步。",
+  "tags": [
+    "agent-optimization",
+    "claude-code",
+    "coding-assistant",
+    "performance-tuning",
+    "memory-management",
+    "security",
+    "developer-tools"
+  ],
+  "score": 9.0,
+  "relevant": true,
+  "analyzed_at": "2026-05-10T11:31:54.840335+00:00",
+  "model_provider": "deepseek",
+  "status": "pending_review",
+  "retry_count": 0,
+  "published_to": [],
+  "reviewer": null,
+  "reviewed_at": null
+}

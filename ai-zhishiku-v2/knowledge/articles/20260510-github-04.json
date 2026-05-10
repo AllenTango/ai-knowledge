@@ -1,0 +1,40 @@
+{
+  "id": "0dc241b2-9af1-4837-ac2e-2fb6edd659c1",
+  "source": "github",
+  "source_url": "https://github.com/Significant-Gravitas/AutoGPT",
+  "title": "Significant-Gravitas/AutoGPT",
+  "content": "AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.",
+  "fetched_at": "2026-05-10T11:31:38.215103+00:00",
+  "stars": 184134,
+  "language": "Python",
+  "topics": [
+    "agentic-ai",
+    "agents",
+    "ai",
+    "artificial-intelligence",
+    "autonomous-agents",
+    "claude",
+    "gpt",
+    "llama-api",
+    "llm",
+    "openai",
+    "python"
+  ],
+  "summary": "AutoGPT 是一个开源项目，旨在提供人人可用的 AI 工具，实现自主任务执行。其重要性在于它展示了大型语言模型（LLM）从对话助手向自主代理（Agent）的进化，能分解复杂目标并逐步完成。与 AI 领域紧密相关，推动了 LLM 在自动化、决策和工具调用方面的实际应用，是当前 Agent 范式发展的关键实例。",
+  "tags": [
+    "autogpt",
+    "open-source",
+    "llm",
+    "agent",
+    "automation"
+  ],
+  "score": 8.7,
+  "relevant": true,
+  "analyzed_at": "2026-05-10T11:31:51.223596+00:00",
+  "model_provider": "deepseek",
+  "status": "pending_review",
+  "retry_count": 0,
+  "published_to": [],
+  "reviewer": null,
+  "reviewed_at": null
+}
