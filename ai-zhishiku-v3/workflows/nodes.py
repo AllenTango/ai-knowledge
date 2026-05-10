@@ -325,34 +325,62 @@ def organize_node(state: KBState) -> dict:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# 节点 4: review_node — LLM 四维度评分
+# 节点 4: review_node — LLM 5 维度加权评分
 # ═══════════════════════════════════════════════════════════════════
 
 REVIEW_SYSTEM_PROMPT = """你是一个知识库质量审核员。
-请对以下知识条目按四个维度评分（每个维度 0-10 分）：
+请对以下分析条目按 5 个维度评分，每个维度 1-10 分：
 
-1. 摘要质量(0-10): 中文通畅性、50-200字合规、是否包含
-   "是什么 / 为什么重要 / 与 AI 领域关联"三层结构
-2. 标签准确(0-10): 标签是否贴合内容、3-8个范围、
-   小写英文连字符格式
-3. 分类合理(0-10): 条目是否属于 AI/LLM/Agent/机器学习领域
-4. 一致性(0-10): score 与 summary 质量是否匹配
-   （高分低质 = 扣分）
+- summary_quality（摘要质量，权重 25%）：中文通畅、50-200字、结构完整（是什么/为什么/关联）
+- technical_depth（技术深度，权重 25%）：技术细节、可行性、深度
+- relevance（相关性，权重 20%）：与 AI/LLM/Agent 领域的关联度
+- originality（原创性，权重 15%）：内容独特性，非泛泛而谈
+- formatting（格式规范，权重 15%）：字段完整、标签合理、无空洞词
 
-总分 = 四维度之和。通过线 = 28（平均 7 分/维度）。
-
-输出 JSON:
+输出 JSON（不要包含其他内容）：
 {
-    "passed": true/false,
-    "total_score": 总分,
-    "dimensions": {"摘要质量": n, "标签准确": n, "分类合理": n, "一致性": n},
-    "feedback": "未通过时的具体问题和改进方向"
-}
-只输出 JSON。"""
+    "reviews": [
+        {
+            "id": "条目id",
+            "summary_quality": 8,
+            "technical_depth": 7,
+            "relevance": 9,
+            "originality": 6,
+            "formatting": 8
+        },
+        ...
+    ]
+}"""
 
 
-def review_node(state: KBState) -> dict:
-    """审核节点：四维度评分 + 强制通过兜底。
+def _recompute_weighted_score(reviews: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """代码级重算加权总分，不信任 LLM 算术。
+
+    Args:
+        reviews: LLM 返回的维度评分列表。
+
+    Returns:
+        附加了 weighted_score 和 passed 字段的 reviews。
+    """
+    for review in reviews:
+        weighted = 0.0
+        for dim_key in ("summary_quality", "technical_depth", "relevance", "originality", "formatting"):
+            score = float(review.get(dim_key, 0))
+            weight = {"summary_quality": 0.25, "technical_depth": 0.25, "relevance": 0.20, "originality": 0.15, "formatting": 0.15}[dim_key]
+            weighted += score * weight
+        review["weighted_score"] = round(weighted, 2)
+        review["passed"] = weighted >= 7.0
+    return reviews
+
+
+def review_node(state: KBState) -> dict[str, Any]:
+    """审核节点：对 analyses 执行 5 维度加权质量评分。
+
+    - 审核对象：state["analyses"]（非 articles）
+    - 只审核前 5 条（控制 token 消耗）
+    - 5 维度：summary_quality/technical_depth/relevance/originality/formatting
+    - 代码重算加权总分，>= 7.0 通过
+    - temperature=0.1，LLM 失败自动通过
 
     Args:
         state: KBState。
@@ -362,13 +390,12 @@ def review_node(state: KBState) -> dict:
     """
     logger.info("--- review_node ---")
 
-    articles = state.get("articles", [])
+    analyses = state.get("analyses", [])
     iteration = state.get("iteration", 0)
     cost_tracker = dict(state.get("cost_tracker", {}))
 
-    # 强制通过：iteration >= 2 → 兜底
-    if iteration >= 2:
-        logger.info(f"iteration={iteration} >= 2，强制通过")
+    if not analyses:
+        logger.warning("analyses 为空，跳过审核")
         return {
             "review_passed": True,
             "review_feedback": "",
@@ -376,19 +403,10 @@ def review_node(state: KBState) -> dict:
             "cost_tracker": cost_tracker,
         }
 
-    if not articles:
-        logger.warning("无 articles 可审核")
-        return {
-            "review_passed": True,
-            "review_feedback": "",
-            "iteration": iteration + 1,
-            "cost_tracker": cost_tracker,
-        }
-
-    from workflows.model_client import chat, check_llm_available
+    from workflows.model_client import chat_json, check_llm_available
 
     if not check_llm_available():
-        logger.warning("LLM 不可用，默认通过")
+        logger.warning("LLM 不可用，默认审核通过")
         return {
             "review_passed": True,
             "review_feedback": "",
@@ -397,60 +415,79 @@ def review_node(state: KBState) -> dict:
         }
 
     provider = os.getenv("LLM_PROVIDER", "deepseek")
-    feedbacks = []
-    all_passed = True
+    to_review = analyses[:5]
 
-    for article in articles:
-        review_input = json.dumps({
-            "title": article.get("title", ""),
-            "summary": article.get("summary", ""),
-            "tags": article.get("tags", []),
-            "score": article.get("score", 0),
-        }, ensure_ascii=False)
+    prompt_lines = []
+    for item in to_review:
+        prompt_lines.append(
+            f"id: {item.get('id', 'unknown')}\n"
+            f"title: {item.get('title', '')}\n"
+            f"summary: {item.get('summary', '')}\n"
+            f"tags: {item.get('tags', [])}\n"
+            f"score: {item.get('score', 0)}\n---"
+        )
+    prompt = "\n".join(prompt_lines)
 
-        try:
-            (text, usage) = chat(
-                system=REVIEW_SYSTEM_PROMPT, prompt=review_input, temperature=0.2
-            )
-
-            json_match = re.search(
-                r"```(?:json)?\s*\n?(.*?)\n?```", text, re.DOTALL
-            )
-            if json_match:
-                text = json_match.group(1)
-
-            review = json.loads(text)
-            cost_tracker = _merge_cost(
-                cost_tracker, usage.total_tokens, provider, "review"
-            )
-        except Exception as e:
-            logger.warning(f"审核失败 ({article.get('title', '?')}): {e}")
-            review = {"passed": True, "total_score": 30, "dimensions": {}, "feedback": ""}
-
-        if not review.get("passed", False):
-            all_passed = False
-            feedbacks.append(
-                f"[{article.get('title', '?')}] {review.get('feedback', '')}"
-            )
-
-        dims = review.get("dimensions", {})
-        logger.info(
-            f"  审核: {article.get('title', '?')[:30]} "
-            f"passed={review['passed']} "
-            f"摘要={dims.get('摘要质量','?')} "
-            f"标签={dims.get('标签准确','?')} "
-            f"分类={dims.get('分类合理','?')} "
-            f"一致={dims.get('一致性','?')}"
+    try:
+        parsed, usage = chat_json(
+            prompt=prompt,
+            system=REVIEW_SYSTEM_PROMPT,
+            temperature=0.1,
         )
 
+        tokens = usage.total_tokens
+        cost_tracker = _merge_cost(cost_tracker, tokens, provider, "review")
+
+        reviews = parsed.get("reviews", [])
+        reviews = _recompute_weighted_score(reviews)
+
+    except Exception as e:
+        logger.warning(f"LLM 调用失败: {e}，自动通过")
+        return {
+            "review_passed": True,
+            "review_feedback": "",
+            "iteration": iteration + 1,
+            "cost_tracker": cost_tracker,
+        }
+
+    failed = [r for r in reviews if not r.get("passed", False)]
+    all_passed = len(failed) == 0
+
+    for item in to_review:
+        review = next(
+            (r for r in reviews if r.get("id") == item.get("id")), None
+        )
+        if review:
+            logger.info(
+                f"  {item.get('title', '?')[:35]} "
+                f"总分={review.get('weighted_score', '?')} "
+                f"passed={review.get('passed')}"
+            )
+
     new_iteration = iteration + 1
+    feedback = ""
+    if not all_passed:
+        feedback_parts = []
+        for r in failed:
+            dim_list = [
+                f"{dim_key}={r.get(dim_key, 0)}"
+                for dim_key in ("summary_quality", "technical_depth", "relevance", "originality", "formatting")
+                if r.get(dim_key, 0) < 7
+            ]
+            feedback_parts.append(
+                f"[{r.get('id', '?')}] 加权总分={r.get('weighted_score', 0)}，"
+                f"低分维度: {', '.join(dim_list) if dim_list else '整体偏低'}"
+            )
+        feedback = "; ".join(feedback_parts)
+
     logger.info(
-        f"审核完成: passed={all_passed}, iteration={new_iteration}"
+        f"审核完成: passed={all_passed}, iteration={new_iteration}, "
+        f"反馈={feedback[:80] if feedback else '(无)'}"
     )
 
     return {
         "review_passed": all_passed,
-        "review_feedback": "; ".join(feedbacks) if feedbacks else "",
+        "review_feedback": feedback,
         "iteration": new_iteration,
         "cost_tracker": cost_tracker,
     }
