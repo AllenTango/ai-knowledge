@@ -1,4 +1,4 @@
-"""LangGraph 工作流节点函数 — collect, analyze, organize, review, save。
+"""LangGraph 工作流节点函数 — planner, collect, analyze, organize, review, revise, save, human_flag。
 
 每个节点接收 KBState，返回部分状态更新 dict，由 StateGraph 自动合并。
 """
@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_ARTICLES = PROJECT_ROOT / "knowledge" / "articles"
+MAX_ITERATIONS = 3
 
 
 def _merge_cost(
@@ -40,7 +41,7 @@ def _merge_cost(
     Returns:
         更新后的 cost_tracker 副本。
     """
-    ct = {
+    ct: dict[str, Any] = {
         "total_tokens": cost_tracker.get("total_tokens", 0) + tokens,
         "total_cost_cny": cost_tracker.get("total_cost_cny", 0.0),
         "providers": dict(cost_tracker.get("providers", {})),
@@ -54,6 +55,82 @@ def _merge_cost(
         ct["providers"][provider].get("tokens", 0) + tokens
     )
     return ct
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 节点 0: planner_node — 制定工作流策略
+# ═══════════════════════════════════════════════════════════════════
+
+def plan_strategy(target_count: int | None = None) -> dict[str, Any]:
+    """根据目标采集量返回工作流策略。
+
+    Args:
+        target_count: 目标采集条目数，None 时从环境变量 PLANNER_TARGET_COUNT 读取。
+
+    Returns:
+        策略 dict，包含 strategy / per_source_limit / relevance_threshold /
+        max_iterations / rationale。
+    """
+    if target_count is None:
+        target_count = int(os.getenv("PLANNER_TARGET_COUNT", "10"))
+
+    if target_count < 10:
+        strategy = "lite"
+        per_source_limit = 5
+        relevance_threshold = 0.7
+        max_iterations = 1
+        rationale = (
+            f"目标采集量 {target_count} < 10，采用 lite 策略："
+            "每个数据源限制 5 条，相关性阈值 0.7（高质量过滤），"
+            "审核循环上限 1 次。适用于试探性采集，节省 token。"
+        )
+    elif target_count < 20:
+        strategy = "standard"
+        per_source_limit = 10
+        relevance_threshold = 0.5
+        max_iterations = 2
+        rationale = (
+            f"目标采集量 {target_count} 处于 [10, 20) 区间，采用 standard 策略："
+            "每个数据源限制 10 条，相关性阈值 0.5（平衡质量和覆盖），"
+            "审核循环上限 2 次。适用于日常采集场景。"
+        )
+    else:
+        strategy = "full"
+        per_source_limit = 20
+        relevance_threshold = 0.4
+        max_iterations = 3
+        rationale = (
+            f"目标采集量 {target_count} >= 20，采用 full 策略："
+            "每个数据源限制 20 条，相关性阈值 0.4（宽口径收录），"
+            "审核循环上限 3 次，配合人工标记兜底。适用于深度全量采集。"
+        )
+
+    return {
+        "strategy": strategy,
+        "per_source_limit": per_source_limit,
+        "relevance_threshold": relevance_threshold,
+        "max_iterations": max_iterations,
+        "target_count": target_count,
+        "rationale": rationale,
+    }
+
+
+def planner_node(state: KBState) -> dict[str, Any]:
+    """Planner 节点：制定工作流策略。
+
+    Args:
+        state: KBState。
+
+    Returns:
+        dict: 包含 plan 配置。
+    """
+    logger.info("--- planner_node ---")
+
+    target = state.get("target_count")
+    plan = plan_strategy(target_count=target)
+    logger.info(f"策略: {plan['strategy']} | {plan['rationale']}")
+
+    return {"plan": plan}
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -74,6 +151,9 @@ def collect_node(state: KBState) -> dict:
     cost_tracker = dict(state.get("cost_tracker", {}))
 
     # ── GitHub Search API（urllib.request） ──────────────────────
+    plan = state.get("plan", {})
+    per_source_limit = plan.get("per_source_limit", 10)
+    logger.info(f"per_source_limit: {per_source_limit}")
 
     query_keywords = ["AI", "LLM", "agent", "langchain", "machine learning"]
     query = " OR ".join(query_keywords)
@@ -95,7 +175,7 @@ def collect_node(state: KBState) -> dict:
         with urllib.request.urlopen(req, timeout=15) as resp:
             data = json.loads(resp.read().decode("utf-8"))
 
-        for item in data.get("items", [])[:10]:
+        for item in data.get("items", [])[:per_source_limit]:
             sources.append({
                 "id": str(uuid.uuid4()),
                 "title": item.get("full_name", ""),
@@ -114,7 +194,7 @@ def collect_node(state: KBState) -> dict:
 
     try:
         from workflows.collector import fetch_rss_sources
-        rss_items = fetch_rss_sources(limit=10)
+        rss_items = fetch_rss_sources(limit=per_source_limit)
         for item in rss_items:
             item.setdefault("id", str(uuid.uuid4()))
             item.setdefault("fetched_at", datetime.now(timezone.utc).isoformat())
@@ -247,9 +327,11 @@ def organize_node(state: KBState) -> dict:
     review_feedback = state.get("review_feedback", "")
     cost_tracker = dict(state.get("cost_tracker", {}))
 
-    # Step 1: 过滤低分条目（score < 0.6）
-    filtered = [a for a in analyses if a.get("score", 0) >= 0.6]
-    logger.info(f"过滤后: {len(filtered)}/{len(analyses)} 条")
+    # Step 1: 过滤低分条目（使用 plan 中的 relevance_threshold）
+    plan = state.get("plan", {})
+    threshold = plan.get("relevance_threshold", 0.6)
+    filtered = [a for a in analyses if a.get("score", 0) >= threshold]
+    logger.info(f"过滤后: {len(filtered)}/{len(analyses)} 条（阈值 {threshold}）")
 
     # Step 2: 按 URL 去重
     seen_urls: set[str] = set()
@@ -653,7 +735,6 @@ def save_node(state: KBState) -> dict:
 # ═══════════════════════════════════════════════════════════════════
 
 HUMAN_FLAG_DIR = PROJECT_ROOT / "knowledge" / "human_review"
-MAX_ITERATIONS = 3
 
 
 def human_flag_node(state: KBState) -> dict[str, Any]:

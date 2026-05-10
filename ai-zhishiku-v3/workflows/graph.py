@@ -1,12 +1,12 @@
 """LangGraph 知识库工作流 — 图定义与条件边。
 
 工作流节点：
-  collect → analyze → organize → review
-                                    │
-                        decide_next:
-                          - review_passed=True → save → END
-                          - review_passed=False & iteration<2 → revise → organize
-                          - review_passed=False & iteration>=2 → human_flag → END
+  planner → collect → analyze → organize → review
+                                          │
+                          route_after_review:
+                            - review_passed=True → organize → save → END
+                            - review_passed=False & iteration<3 → revise → review
+                            - review_passed=False & iteration>=3 → human_flag → END
 """
 
 import logging
@@ -15,6 +15,7 @@ from langgraph.graph import StateGraph, END
 
 from workflows.state import KBState
 from workflows.nodes import (
+    planner_node,
     collect_node,
     analyze_node,
     organize_node,
@@ -32,20 +33,25 @@ logger = logging.getLogger(__name__)
 def route_after_review(state: KBState) -> str:
     """条件边：review 之后根据 review_passed 和 iteration 三分支路由。
 
+    使用 state["plan"]["max_iterations"] 作为循环上限。
+
     Args:
         state: KBState 当前状态。
 
     Returns:
         "organize"    — review_passed=True，通过审核
-        "revise"      — review_passed=False 且 iteration < 3，修正后重新审核
-        "human_flag"  — review_passed=False 且 iteration >= 3，需人工判断
+        "revise"      — review_passed=False 且 iteration < max_iterations，修正后重新审核
+        "human_flag"  — review_passed=False 且 iteration >= max_iterations，需人工判断
     """
     if state.get("review_passed", False):
         return "organize"
 
     iteration = state.get("iteration", 0)
-    if iteration >= MAX_ITERATIONS:
-        logger.info(f"iteration={iteration} >= 3，进入人工标记")
+    plan = state.get("plan", {})
+    max_iter = plan.get("max_iterations", MAX_ITERATIONS)
+
+    if iteration >= max_iter:
+        logger.info(f"iteration={iteration} >= max_iterations={max_iter}，进入人工标记")
         return "human_flag"
 
     return "revise"
@@ -59,6 +65,7 @@ def build_graph():
     """
     workflow = StateGraph(KBState)
 
+    workflow.add_node("planner", planner_node)
     workflow.add_node("collect", collect_node)
     workflow.add_node("analyze", analyze_node)
     workflow.add_node("organize", organize_node)
@@ -67,8 +74,9 @@ def build_graph():
     workflow.add_node("save", save_node)
     workflow.add_node("human_flag", human_flag_node)
 
-    workflow.set_entry_point("collect")
+    workflow.set_entry_point("planner")
 
+    workflow.add_edge("planner", "collect")
     workflow.add_edge("collect", "analyze")
     workflow.add_edge("analyze", "organize")
     workflow.add_edge("organize", "review")

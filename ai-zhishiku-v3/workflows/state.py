@@ -77,3 +77,16 @@ class KBState(TypedDict):
     而是写入待人工审核目录（knowledge/human_review/）。
     流程终结，不再流向 save。
     """
+
+    plan: dict
+    """本次采集策略配置。
+    由 planner_node 写入，格式：
+    {
+        "strategy": "lite"|"standard"|"full",
+        "per_source_limit": int,
+        "relevance_threshold": float,
+        "max_iterations": int,
+        "rationale": str
+    }
+    各节点根据此配置控制行为强度。
+    """
