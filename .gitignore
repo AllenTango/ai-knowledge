@@ -1,0 +1,10 @@
+*.pyc
+.env
+.venv
+.test*
+knowledge/*
+ai-zhishiku-v4/knowledge/articles/*.json
+ai-zhishiku-v4/knowledge/analyzer_output/*.json
+ai-zhishiku-v4/knowledge/human_review/*.json
+ai-zhishiku-v4/knowledge/raw/*.json
+ai-zhishiku-v4/logs/*.log

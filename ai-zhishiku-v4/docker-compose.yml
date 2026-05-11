@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-zhishiku-pipeline
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-deepseek}
+    volumes:
+      - knowledge_data:/app/knowledge
+      - logs_data:/app/logs
+    command: cron
+
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-zhishiku-mcp
+    restart: unless-stopped
+    ports:
+      - "${MCP_PORT:-8080}:8080"
+    volumes:
+      - knowledge_data:/app/knowledge:ro
+    command: mcp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  knowledge_data:
+    driver: local
+  logs_data:
+    driver: local
