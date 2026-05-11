@@ -52,7 +52,7 @@ ai-zhishiku-v4/
 │   ├── __init__.py
 │   ├── state.py                   # KBState 状态定义（TypedDict）
 │   ├── graph.py                   # LangGraph 图定义与条件边
-│   └── nodes.py                   # 所有节点函数（planner/collect/analyze/organize/review/revise/save/human_flag/revise_node/human_flag_node）
+│   └── nodes.py                   # 节点函数（planner/collect/analyze/organize/review/revise/save/human_flag_node）
 │                                   # 注意：LLM 客户端位于 scripts/model_client.py
 ├── pipeline/                       # Pipeline 工作流（独立顺序脚本）
 │   ├── pipeline.py                # 四步流水线主脚本（采集→分析→整理→保存）
@@ -74,36 +74,45 @@ ai-zhishiku-v4/
 │       └── tech-summary/           # 技术内容深度分析技能
 ├── hooks/                          # 质量检查钩子
 │   ├── check_quality.py           # 5 维度质量评分工具
-│   └── validate_json.py           # JSON 格式校验工具
+│   ├── validate_json.py           # JSON 格式校验工具
+│   └── preflight_checklist.py     # 上线前全面检查（API KEY/权限/备份/成本/GitHub Actions 等）
 ├── scripts/                        # 辅助脚本（核心业务逻辑）
 │   ├── collector.py               # 数据采集（GitHub/RSS）
 │   ├── analyzer.py                # AI 分析（过滤/评分）
 │   ├── organizer.py               # 数据整理（去重/格式化）
-│   ├── reviewer.py                # 审核评分（空洞词/摘要质量）
+│   ├── reviewer.py               # 审核评分（空洞词/摘要质量）
 │   ├── model_client.py            # LLM 统一客户端（所有工作流共用）
-│   ├── cost_guard.py              # 成本守卫
-│   └── security.py                # 安全工具（sanitize_input/filter_output）
+│   ├── cost_guard.py              # 成本守卫（限制单次/累计成本）
+│   ├── security.py               # 安全工具（sanitize_input/filter_output）
+│   ├── daily_digest.py            # 简报推送脚本（支持 --date/--dry-run/--force）
+│   └── mcp_http_server.py         # MCP HTTP API 服务器（FastAPI + uvicorn）
 ├── scheduler/                      # 定时调度脚本
 │   ├── run_pipeline.sh            # Linux/Mac 调度脚本
-│   ├── run_pipeline.ps1           # Windows PowerShell 调度脚本
-│   ├── setup_task_scheduler.ps1   # 定时任务安装脚本
+│   ├── daily_digest_cron.sh       # 每日简报推送（每天 09:00）
 │   └── crontab.txt                # crontab 配置示例
 ├── distribution/                    # 分发渠道
+│   ├── __init__.py
 │   ├── formatter.py               # 内容格式化
-│   └── publisher.py               # 发布执行
+│   └── publisher.py               # 发布执行（OpenClaw/Telegram/飞书）
 ├── bot/                            # 机器人模块
 │   ├── __init__.py
 │   └── knowledge_bot.py          # 知识库交互机器人（搜索/订阅/权限）
 ├── daily_digest.py                 # 每日摘要生成
+├── docker/                        # Docker 容器配置
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── crontab.txt
+│   └── docker-entrypoint.sh
+├── reports/                       # 检查报告（preflight-*.json）
+├── .github/workflows/             # GitHub Actions
+│   └── daily-collect.yml          # 每日自动采集工作流
 ├── knowledge/                      # 知识库存储
 │   ├── raw/                       # 原始采集数据
 │   ├── analyzer_output/           # AI 分析结果
 │   ├── articles/                  # 知识条目（最终入库）
 │   └── human_review/              # 需人工审核的条目
 ├── tests/                          # 测试与评估
-│   ├── eval_test.py               # 评估测试（含 judge_score）
-│   ├── cost_guard.py             # 成本防护测试
-│   └── security.py               # 安全防护测试
+│   └── eval_test.py               # 评估测试（含 judge_score）
 │                                   # 注意：cost_guard.py 和 security.py 在 scripts/ 下
 ├── .openclaw/                      # 小芽的家（身份文件）
 │   ├── AGENTS.md
