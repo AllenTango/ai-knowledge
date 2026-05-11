@@ -1,0 +1,28 @@
+=== V4 完整性检查 ===
+
+--- V1 基础（.opencode/agents 在 v1-skeleton 或 v2-automation 中） ---
+  [OK] AGENTS.md
+
+--- V2 自动化（pipeline 继承自 V3，V4 重写为 LangGraph 薄封装） ---
+  [OK] pipeline/pipeline.py
+
+--- V3 多 Agent（workflows + patterns + tests，V4 从 v3-multi-agent 拷贝继承） ---
+  [OK] workflows/graph.py
+  [OK] workflows/nodes.py
+  [OK] workflows/state.py
+  [OK] scripts/model_client.py
+  [!!] patterns/planner.py (缺失)
+  [OK] patterns/router.py
+  [OK] patterns/supervisor.py
+
+--- V4 部署（分发 + Bot + 容器化） ---
+  [OK] Dockerfile
+  [OK] docker-compose.yml
+  [OK] bot/knowledge_bot.py
+  [OK] distribution/formatter.py
+  [OK] distribution/publisher.py
+  [OK] daily_digest.py
+  [!!] .openclaw/openclaw.json (缺失)
+  [OK] .openclaw/AGENTS.md
+  [OK] .openclaw/SOUL.md
+  [OK] .openclaw/knowledge-recommend/SKILL.md
