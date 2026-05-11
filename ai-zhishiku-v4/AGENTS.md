@@ -52,7 +52,7 @@ ai-zhishiku-v4/
 │   ├── __init__.py
 │   ├── state.py                   # KBState 状态定义（TypedDict）
 │   ├── graph.py                   # LangGraph 图定义与条件边
-│   └── nodes.py                   # 所有节点函数（planner/collect/analyze/organize/review/revise/save/human_flag）
+│   └── nodes.py                   # 所有节点函数（planner/collect/analyze/organize/review/revise/save/human_flag/revise_node/human_flag_node）
 │                                   # 注意：LLM 客户端位于 scripts/model_client.py
 ├── pipeline/                       # Pipeline 工作流（独立顺序脚本）
 │   ├── pipeline.py                # 四步流水线主脚本（采集→分析→整理→保存）
@@ -101,7 +101,9 @@ ai-zhishiku-v4/
 │   ├── articles/                  # 知识条目（最终入库）
 │   └── human_review/              # 需人工审核的条目
 ├── tests/                          # 测试与评估
-│   └── eval_test.py               # 评估测试（含 judge_score）
+│   ├── eval_test.py               # 评估测试（含 judge_score）
+│   ├── cost_guard.py             # 成本防护测试
+│   └── security.py               # 安全防护测试
 │                                   # 注意：cost_guard.py 和 security.py 在 scripts/ 下
 ├── .openclaw/                      # 小芽的家（身份文件）
 │   ├── AGENTS.md
@@ -154,7 +156,7 @@ planner → collect → analyze → organize → review
                           route_after_review:
                             - review_passed=True → save → END
                             - review_passed=False & iteration<max → revise → review
-                            - review_passed=False & iteration>=max → human_flag → END
+                            - review_passed=False & iteration>=max → human_flag_node → END
 ```
 
 **使用方式：**
