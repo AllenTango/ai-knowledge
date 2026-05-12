@@ -228,12 +228,12 @@ ANALYZE_SYSTEM_PROMPT = """你是一个 AI 技术资讯分析师。
 {
     "summary": "中文摘要，50-200字，包含：是什么 / 为什么重要 / 与 AI 领域关联三个层次",
     "tags": ["标签1", "标签2"],
-    "score": 0.85
+    "score": 8.5
 }
 
 规则：
 - tags: 3-8 个小写英文标签，用连字符连接（如 agent、llm-framework）
-- score: 0.0-1.0 相关性评分（0.7+ = 高质量，<0.6 = 低质）
+- score: 0.0-10.0 相关性评分（≥7.0 高质量，<5.0 低质），与系统评分标准一致
 - 只输出 JSON，不要其他内容"""
 
 
@@ -756,11 +756,12 @@ HUMAN_FLAG_DIR = PROJECT_ROOT / "knowledge" / "human_review"
 
 
 def human_flag_node(state: KBState) -> dict[str, Any]:
-    """人工标记节点：超过最大循环次数仍未通过，将问题条目写入独立目录。
+    """人工标记节点：超过最大循环次数仍未通过，将条目写入独立目录。
 
     当 review_passed 持续为 False 且 iteration 超过上限时，
     说明问题不在"质量"而在"数据本身"，需要人工介入判断。
-    将当前 analyses 和 review_feedback 写入待人工审核目录，不污染主知识库。
+    将当前 articles 以标准 article 格式写入 human_review/ 目录，
+    不污染主知识库（knowledge/articles/）。
 
     Args:
         state: KBState。
@@ -770,26 +771,26 @@ def human_flag_node(state: KBState) -> dict[str, Any]:
     """
     logger.info("--- human_flag_node ---")
 
-    analyses = state.get("analyses", [])
-    feedback = state.get("review_feedback", "")
+    articles = state.get("articles", [])
     iteration = state.get("iteration", 0)
 
     HUMAN_FLAG_DIR.mkdir(parents=True, exist_ok=True)
-    date_str = datetime.now(timezone.utc).strftime("%Y%m%d")
-    flag_file = HUMAN_FLAG_DIR / f"flag-{date_str}-{uuid.uuid4().hex[:8]}.json"
+    saved = 0
 
-    flag_data = {
-        "flagged_at": datetime.now(timezone.utc).isoformat(),
-        "iteration": iteration,
-        "review_feedback": feedback,
-        "analyses_count": len(analyses),
-        "analyses": analyses,
-    }
+    for item in articles:
+        aid = item.get("id", str(uuid.uuid4()))
+        item["status"] = "human_review"
+        item["reviewer"] = "human-flag"
+        item["reviewed_at"] = datetime.now(timezone.utc).isoformat()
 
-    with open(flag_file, "w", encoding="utf-8") as f:
-        json.dump(flag_data, f, ensure_ascii=False, indent=2)
+        hr_file = HUMAN_FLAG_DIR / f"{aid}.json"
+        try:
+            with open(hr_file, "w", encoding="utf-8") as f:
+                json.dump(item, f, ensure_ascii=False, indent=2)
+            logger.info(f"  写入 human_review/: {hr_file.name}")
+            saved += 1
+        except IOError as e:
+            logger.error(f"  写入失败 ({hr_file.name}): {e}")
 
-    logger.info(f"人工标记: {flag_file.name}，{len(analyses)} 条条目")
-    logger.info(f"反馈: {feedback[:120] if feedback else '(无)'}...")
-
+    logger.info(f"人工标记: {saved}/{len(articles)} 条条目移入 human_review/，iteration={iteration}")
     return {}

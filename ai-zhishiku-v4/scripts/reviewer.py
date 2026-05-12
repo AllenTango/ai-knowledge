@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE_ARTICLES = PROJECT_ROOT / "knowledge" / "articles"
+KNOWLEDGE_HUMAN_REVIEW = PROJECT_ROOT / "knowledge" / "human_review"
 
 BUZZWORDS_CN = [
     "赋能",
@@ -111,7 +112,7 @@ def score_format(article: dict[str, Any]) -> int:
         bool(article.get("id")),
         bool(article.get("title")),
         bool(article.get("source_url", "").startswith("http")),
-        article.get("status") in ("pending_review", "approved", "rejected", "published"),
+        article.get("status") in ("pending_review", "approved", "rejected"),
         bool(article.get("fetched_at")) and bool(article.get("analyzed_at")),
     ]
     return sum(4 for c in checks if c)
@@ -278,6 +279,7 @@ def batch_review() -> list[dict[str, Any]]:
         logger.info(f"  等级 {review['grade']}, 总分 {review['score']}, " f"判定: {verdict}")
 
         now = datetime.now(timezone.utc).isoformat()
+        to_human_review = False
         if verdict == "approved":
             article["status"] = "approved"
             article["reviewer"] = "reviewer-agent"
@@ -289,13 +291,28 @@ def batch_review() -> list[dict[str, Any]]:
         elif verdict == "retry":
             article["retry_count"] = article.get("retry_count", 0) + 1
             if article["retry_count"] >= 3:
-                article["status"] = "rejected"
-                article["reviewer"] = "human_needed"
+                article["status"] = "human_review"
+                article["reviewer"] = "human-reviewer"
                 article["reviewed_at"] = now
-                logger.warning(f"  retry_count >= 3，标记 human_needed")
+                logger.warning(f"  retry_count >= 3，移入人工审核队列")
+                to_human_review = True
+            else:
+                article["status"] = "pending_review"
 
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(article, f, ensure_ascii=False, indent=2)
+        if to_human_review:
+            try:
+                KNOWLEDGE_HUMAN_REVIEW.mkdir(parents=True, exist_ok=True)
+                hr_file = KNOWLEDGE_HUMAN_REVIEW / f"{article.get('id', file_path.stem)}.json"
+                with open(hr_file, "w", encoding="utf-8") as f:
+                    json.dump(article, f, ensure_ascii=False, indent=2)
+                logger.info(f"  已写入 human_review/: {hr_file.name}")
+                file_path.unlink()
+                logger.info(f"  已从 articles/ 删除: {file_path.name}")
+            except IOError as e:
+                logger.error(f"  写入 human_review/ 失败: {e}")
+        else:
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(article, f, ensure_ascii=False, indent=2)
 
         review["article_title"] = title
         results.append(review)

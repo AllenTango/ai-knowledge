@@ -85,7 +85,17 @@ ai-zhishiku-v4/
 │   ├── cost_guard.py              # 成本守卫（限制单次/累计成本）
 │   ├── security.py               # 安全工具（sanitize_input/filter_output）
 │   ├── daily_digest.py            # 简报推送脚本（支持 --date/--dry-run/--force）
-│   └── mcp_http_server.py         # MCP HTTP API 服务器（FastAPI + uvicorn）
+│   ├── mcp_http_server.py         # MCP HTTP API 服务器（FastAPI + uvicorn）
+│   └── start-server.sh            # WSL 看板启动脚本
+├── static/                         # 看板静态文件（Dracula 暗黑主题）
+│   ├── index.html                # 公开看板（只读，仅显示已发布条目）
+│   ├── review.html               # 内部审核看板（拖拽/编辑/批量/human_review）
+│   ├── css/
+│   │   └── dracula.css           # Dracula 暗黑主题样式表
+│   └── js/
+│       ├── api.js                # API 客户端封装
+│       ├── kanban.js             # 看板共享逻辑（卡片/列/模态框/搜索）
+│       └── review.js             # 审核页专用逻辑（拖拽/批量/队列）
 ├── scheduler/                      # 定时调度脚本
 │   ├── run_pipeline.sh            # Linux/Mac 调度脚本
 │   ├── daily_digest_cron.sh       # 每日简报推送（每天 09:00）
@@ -127,6 +137,8 @@ ai-zhishiku-v4/
 ├── opencode.json                  # OpenCode 配置
 ├── requirements.txt               # Python 依赖
 ├── .env                           # 环境变量（API Key 等）
+├── wsl-port-forward.ps1           # Windows 侧端口映射脚本（管理员 PowerShell 运行一次）
+├── KANBAN_PLAN.md                 # 看板实施方案文档
 └── AGENTS.md                      # 本文件
 ```
 
@@ -203,7 +215,7 @@ result = g.invoke(initial_state)
   "analyzed_at": "2026-05-08T02:05:00Z",// 分析完成时间（ISO 8601）
   "summary": "LangChain 发布 v0.3，重点改进了…", // AI 生成的中文摘要（50~200 字）
   "tags": ["langchain", "release", "llm-framework"], // 标签列表（3~8个）
-  "status": "pending_review",           // 状态：pending_review | approved | rejected | published
+  "status": "pending_review",           // 状态：pending_review | approved | rejected
   "score": 8.5,                         // AI 相关性评分（0.0 ~ 10.0）
   "reviewer": null,                     // 审核人（人工审核后填充）
   "reviewed_at": null,                  // 审核时间
@@ -215,15 +227,17 @@ result = g.invoke(initial_state)
 ### 状态流转
 
 ```
-pending_review ──▶ approved ──▶ published
+pending_review ──▶ approved
     │                  │
     └──────▶ rejected ◀┘
+           │
+           └──────▶ human_review
 ```
 
-- `pending_review` —— AI 分析完毕，等待人工审核。
-- `approved` —— 人工审核通过，加入分发队列。
-- `rejected` —— 人工审核驳回（不相关 / 低质量）。
-- `published` —— 已分发至目标渠道。
+- `pending_review` —— 进入 AI reviewer 审核前的初始状态。
+- `approved` —— AI reviewer 审核通过，进入公开看板。
+- `rejected` —— AI reviewer 审核驳回（不相关 / 低质量）。
+- `human_review` —— reviewer 无法正常审核的条目，由人工介入处理，保存于 `knowledge/human_review/` 目录。
 
 ---
 
@@ -355,5 +369,62 @@ python3 mcp_knowledge_server.py
 ```
 
 提供工具：search_articles, get_article, knowledge_stats
+
+---
+
+## 看板系统
+
+### 启动看板服务
+
+**WSL / Linux / Mac：**
+```bash
+bash scripts/start-server.sh
+# 或手动启动
+PYTHONPATH=. python3 scripts/mcp_http_server.py
+```
+
+服务默认监听 `0.0.0.0:8080`。
+
+**Windows 首次访问（WSL2 环境）：**
+以管理员身份运行 PowerShell，执行：
+```powershell
+.\wsl-port-forward.ps1
+```
+之后即可通过 `http://localhost:8080` 访问。
+
+**Docker 部署：**
+```bash
+docker-compose up -d mcp-server
+# 公开看板: http://localhost:8080/
+# 审核看板: http://localhost:8080/static/review.html
+```
+
+### 看板页面
+
+| 页面 | URL | 说明 |
+|------|-----|------|
+| 公开看板 | `/` | 展示所有 `status=approved` 条目，只读，网格/列表视图 |
+| 审核看板 | `/static/review.html` | 3 列 Kanban（待审核/已批准/已驳回），支持拖拽换状态、编辑、批量操作、Human Review 队列 |
+
+### API 端点
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/health` | 健康检查 |
+| GET | `/mcp/stats` | 知识库统计 |
+| GET | `/mcp/search?keyword=&limit=` | 关键词搜索 |
+| GET | `/mcp/articles/{id}` | 按 ID 获取文章 |
+| POST | `/mcp/tools` | MCP 工具调用（含新增的写操作工具） |
+
+### 新增 MCP 工具
+
+| 工具 | 功能 |
+|------|------|
+| `get_all_articles` | 全量返回 + 多条件筛选 |
+| `update_article_status` | 修改文章状态 |
+| `update_article_fields` | 更新标题/摘要/标签/评分 |
+| `batch_update_status` | 批量修改状态 |
+| `get_human_review_items` | 获取人工审核标记列表 |
+| `resolve_human_review` | 处理标记文件（转为正式条目或删除） |
 
 ---

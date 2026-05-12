@@ -64,7 +64,7 @@ python -m scripts.organizer
 | analyzed_at  | string   | 是   | ISO 8601 格式                                                |
 | summary      | string   | 是   | 简体中文，50~200 字                                           |
 | tags         | array    | 是   | 3~8 个元素，每个为小写英文连字符格式                              |
-| status       | string   | 是   | `pending_review` / `approved` / `rejected` / `published`     |
+| status       | string   | 是   | `pending_review` / `approved` / `rejected`                     |
 | score        | number   | 是   | 0.0 ~ 10.0，保留一位小数                                      |
 | reviewer     | string\|null | 是 | 审核人，整理阶段固定为 `null`                                    |
 | reviewed_at  | string\|null | 是 | 审核时间，整理阶段固定为 `null`                                  |
@@ -79,7 +79,7 @@ python -m scripts.organizer
 | `5.0 <= score < 7.0`   | `pending_review`  | 低优先级待审               |
 | `score >= 7.0`         | `pending_review`  | 高优先级待审（队列首位）      |
 
-> 禁止在未审核状态下将状态设为 `approved` 或 `published`。
+> 禁止在未审核状态下将状态设为 `approved`。
 
 ### 第五步：生成 ID 与文件命名
 
@@ -125,7 +125,9 @@ python -m scripts.organizer
 ## 状态流转
 
 ```
-pending_review ──▶ approved ──▶ published
+pending_review ──▶ approved
+    │                  │
+    └──────▶ rejected ◀┘
     │                  │
     └──────▶ rejected ◀┘
 ```
@@ -141,6 +143,4 @@ pending_review ──▶ approved ──▶ published
 - [ ] `fetched_at` / `analyzed_at` 为有效 ISO 8601 格式
 - [ ] `status` 按分值正确判定
 - [ ] `reviewer` / `reviewed_at` / `published_to` 均为初始空值
-- [ ] `retry_count` 保留已有值，首次入库为 0
-- [ ] 不得将 `score < 5.0` 的条目标记为 `published`
 - [ ] 文件命名符合 `{date}-{source}-{slug}.json` 规范
