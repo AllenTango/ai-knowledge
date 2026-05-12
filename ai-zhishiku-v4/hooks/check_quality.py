@@ -51,7 +51,7 @@ TECH_KEYWORDS = frozenset({
 })
 
 URL_PATTERN = __import__("re").compile(r"^https?://.+")
-VALID_STATUSES = frozenset({"pending_review", "approved", "rejected"})
+VALID_STATUSES = frozenset({"pending_review", "approved", "rejected", "human_review"})
 
 
 @dataclass

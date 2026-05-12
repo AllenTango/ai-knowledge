@@ -27,7 +27,7 @@ REQUIRED_FIELDS: dict[str, type] = {
     "status": str,
 }
 
-VALID_STATUSES = frozenset({"pending_review", "approved", "rejected"})
+VALID_STATUSES = frozenset({"pending_review", "approved", "rejected", "human_review"})
 
 URL_PATTERN = re.compile(r"^https?://.+")
 

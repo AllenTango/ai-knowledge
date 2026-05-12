@@ -112,7 +112,7 @@ def score_format(article: dict[str, Any]) -> int:
         bool(article.get("id")),
         bool(article.get("title")),
         bool(article.get("source_url", "").startswith("http")),
-        article.get("status") in ("pending_review", "approved", "rejected"),
+        article.get("status") in ("pending_review", "approved", "rejected", "human_review"),
         bool(article.get("fetched_at")) and bool(article.get("analyzed_at")),
     ]
     return sum(4 for c in checks if c)
