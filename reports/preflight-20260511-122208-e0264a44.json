@@ -1,0 +1,411 @@
+{
+  "report_id": "e0264a44-a334-45d4-9247-a470d540787a",
+  "created_at": "2026-05-11T12:22:04.767249+00:00",
+  "total": 40,
+  "passed": 35,
+  "failed": 0,
+  "warning": 5,
+  "all_passed": true,
+  "checks": [
+    {
+      "item_id": "api-01",
+      "category": "API KEY & 环境变量",
+      "name": ".env 环境变量文件存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": ".env 存在于 /home/dev/multi-agent-design/ai-zhishiku-v4",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.767384+00:00"
+    },
+    {
+      "item_id": "api-02",
+      "category": "API KEY & 环境变量",
+      "name": ".env 未纳入 git 版本管理",
+      "passed": true,
+      "severity": "critical",
+      "detail": ".env 未在 git 跟踪中",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.770761+00:00"
+    },
+    {
+      "item_id": "api-03",
+      "category": "API KEY & 环境变量",
+      "name": "LLM_PROVIDER 已设置",
+      "passed": true,
+      "severity": "critical",
+      "detail": "LLM_PROVIDER=deepseek",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.770803+00:00"
+    },
+    {
+      "item_id": "api-04",
+      "category": "API KEY & 环境变量",
+      "name": "至少配置一个 LLM API Key",
+      "passed": true,
+      "severity": "critical",
+      "detail": "已配置: DEEPSEEK_API_KEY",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.770827+00:00"
+    },
+    {
+      "item_id": "api-05",
+      "category": "API KEY & 环境变量",
+      "name": "分发渠道密钥已配置",
+      "passed": false,
+      "severity": "warning",
+      "detail": "所有分发渠道均未配置",
+      "suggestion": "至少配置一个分发渠道（Telegram / 飞书 / QQ）",
+      "timestamp": "2026-05-11T12:22:04.770844+00:00"
+    },
+    {
+      "item_id": "api-06",
+      "category": "API KEY & 环境变量",
+      "name": "源代码无硬编码 API Key",
+      "passed": true,
+      "severity": "critical",
+      "detail": "未发现硬编码",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.775153+00:00"
+    },
+    {
+      "item_id": "api-07",
+      "category": "API KEY & 环境变量",
+      "name": "env.example 与 .env 结构一致",
+      "passed": true,
+      "severity": "info",
+      "detail": "结构一致",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.775316+00:00"
+    },
+    {
+      "item_id": "perm-01",
+      "category": "权限检查",
+      "name": "knowledge/ 各级目录可写",
+      "passed": true,
+      "severity": "critical",
+      "detail": "所有目录可写",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.775427+00:00"
+    },
+    {
+      "item_id": "perm-02",
+      "category": "权限检查",
+      "name": "scheduler/run_pipeline.sh 有执行权限",
+      "passed": true,
+      "severity": "critical",
+      "detail": "可执行",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.775475+00:00"
+    },
+    {
+      "item_id": "perm-03",
+      "category": "权限检查",
+      "name": "Git 仓库可读",
+      "passed": true,
+      "severity": "critical",
+      "detail": "Git 仓库: /home/dev/multi-agent-design/.git",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.778031+00:00"
+    },
+    {
+      "item_id": "perm-04",
+      "category": "权限检查",
+      "name": "logs/ 目录可写",
+      "passed": true,
+      "severity": "warning",
+      "detail": "日志目录可写",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.778108+00:00"
+    },
+    {
+      "item_id": "perm-05",
+      "category": "权限检查",
+      "name": "openclaw CLI 可用",
+      "passed": true,
+      "severity": "warning",
+      "detail": "openclaw 已安装",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.905874+00:00"
+    },
+    {
+      "item_id": "backup-01",
+      "category": "备份策略",
+      "name": "Git remote origin 已配置",
+      "passed": true,
+      "severity": "warning",
+      "detail": "Remote URL: https://github.com/AllenTango/multi-agent-design.git",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.908739+00:00"
+    },
+    {
+      "item_id": "backup-02",
+      "category": "备份策略",
+      "name": "knowledge/articles/ 纳入 git 版本管理",
+      "passed": true,
+      "severity": "warning",
+      "detail": "knowledge/articles/ 在 git 管理中",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.914233+00:00"
+    },
+    {
+      "item_id": "backup-03",
+      "category": "备份策略",
+      "name": "存在备份脚本或机制",
+      "passed": false,
+      "severity": "info",
+      "detail": "未找到专用备份脚本（git 可充当备份）",
+      "suggestion": "考虑添加定时备份脚本，或依赖 git push 作为远程备份",
+      "timestamp": "2026-05-11T12:22:04.942720+00:00"
+    },
+    {
+      "item_id": "log-01",
+      "category": "日志轮转",
+      "name": "日志输出目录存在",
+      "passed": true,
+      "severity": "warning",
+      "detail": "logs/ 目录可用",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.942812+00:00"
+    },
+    {
+      "item_id": "log-02",
+      "category": "日志轮转",
+      "name": "日志保留天数已配置",
+      "passed": true,
+      "severity": "warning",
+      "detail": "日志保留 30 天",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.943215+00:00"
+    },
+    {
+      "item_id": "log-03",
+      "category": "日志轮转",
+      "name": "自动清理过期日志",
+      "passed": true,
+      "severity": "warning",
+      "detail": "scheduler/run_pipeline.sh 包含日志清理逻辑",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.943237+00:00"
+    },
+    {
+      "item_id": "log-04",
+      "category": "日志轮转",
+      "name": "日志文件占用空间正常",
+      "passed": true,
+      "severity": "info",
+      "detail": "日志总大小 0.0 MB，共 4 个文件",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.943485+00:00"
+    },
+    {
+      "item_id": "cost-01",
+      "category": "成本预算",
+      "name": "成本守卫模块存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": "scripts/cost_guard.py 存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:04.943515+00:00"
+    },
+    {
+      "item_id": "cost-02",
+      "category": "成本预算",
+      "name": "成本守卫功能正常",
+      "passed": true,
+      "severity": "critical",
+      "detail": "cost_guard.py 自测通过",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.012103+00:00"
+    },
+    {
+      "item_id": "cost-03",
+      "category": "成本预算",
+      "name": "存在历史成本报告",
+      "passed": false,
+      "severity": "info",
+      "detail": "未找到历史成本报告（首次运行正常）",
+      "suggestion": "首次运行可忽略，后续将自动生成",
+      "timestamp": "2026-05-11T12:22:05.012686+00:00"
+    },
+    {
+      "item_id": "ver-01",
+      "category": "版本固定",
+      "name": "requirements.txt 存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": "requirements.txt 存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.012771+00:00"
+    },
+    {
+      "item_id": "ver-02",
+      "category": "版本固定",
+      "name": "依赖版本已固定",
+      "passed": false,
+      "severity": "warning",
+      "detail": "全部使用 >= 下限（7 个），建议改为 == 固定版本",
+      "suggestion": "将 >= 改为 == 固定版本，或生成 requirements.lock",
+      "timestamp": "2026-05-11T12:22:05.012887+00:00"
+    },
+    {
+      "item_id": "ver-03",
+      "category": "版本固定",
+      "name": "Python 版本 >= 3.10",
+      "passed": true,
+      "severity": "critical",
+      "detail": "当前 Python 3.10",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.012899+00:00"
+    },
+    {
+      "item_id": "ver-04",
+      "category": "版本固定",
+      "name": "核心依赖 langgraph 已声明",
+      "passed": true,
+      "severity": "critical",
+      "detail": "依赖声明: langgraph>=0.3.0",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.012930+00:00"
+    },
+    {
+      "item_id": "test-01",
+      "category": "测试通道",
+      "name": "tests/ 目录存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": "tests/ 目录存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.012990+00:00"
+    },
+    {
+      "item_id": "test-02",
+      "category": "测试通道",
+      "name": "eval_test.py 测试文件存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": "tests/eval_test.py 存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:05.013017+00:00"
+    },
+    {
+      "item_id": "test-03",
+      "category": "测试通道",
+      "name": "pytest 可发现测试用例",
+      "passed": true,
+      "severity": "critical",
+      "detail": "发现 10 个测试用例",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:07.985516+00:00"
+    },
+    {
+      "item_id": "test-04",
+      "category": "测试通道",
+      "name": "pytest 已安装",
+      "passed": true,
+      "severity": "critical",
+      "detail": "pytest 版本: pytest 9.0.3",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251101+00:00"
+    },
+    {
+      "item_id": "test-05",
+      "category": "测试通道",
+      "name": "测试配置文件 conftest.py 存在",
+      "passed": false,
+      "severity": "info",
+      "detail": "conftest.py 不存在（可选）",
+      "suggestion": "创建 conftest.py 配置 pytest fixtures 和环境",
+      "timestamp": "2026-05-11T12:22:08.251253+00:00"
+    },
+    {
+      "item_id": "oc-01",
+      "category": "OpenClaw 状态",
+      "name": ".openclaw/ 目录存在",
+      "passed": true,
+      "severity": "warning",
+      "detail": ".openclaw/ 目录存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251283+00:00"
+    },
+    {
+      "item_id": "oc-02",
+      "category": "OpenClaw 状态",
+      "name": "OpenClaw 身份文件齐全",
+      "passed": true,
+      "severity": "warning",
+      "detail": "所有身份文件齐全",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251361+00:00"
+    },
+    {
+      "item_id": "oc-03",
+      "category": "OpenClaw 状态",
+      "name": "workspace-state.json 有效",
+      "passed": true,
+      "severity": "warning",
+      "detail": "workspace-state.json 格式有效",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251467+00:00"
+    },
+    {
+      "item_id": "oc-04",
+      "category": "OpenClaw 状态",
+      "name": "OPENCLAW_CHANNEL 和 OPENCLAW_TARGET 已配置",
+      "passed": true,
+      "severity": "warning",
+      "detail": "channel=qqbot, target=[已配置]",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251491+00:00"
+    },
+    {
+      "item_id": "gha-01",
+      "category": "GitHub Actions",
+      "name": "daily-collect.yml 工作流存在",
+      "passed": true,
+      "severity": "critical",
+      "detail": ".github/workflows/daily-collect.yml 存在",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251520+00:00"
+    },
+    {
+      "item_id": "gha-02",
+      "category": "GitHub Actions",
+      "name": "调度触发器配置正确",
+      "passed": true,
+      "severity": "critical",
+      "detail": "cron=[已配置], workflow_dispatch=[已配置]",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251560+00:00"
+    },
+    {
+      "item_id": "gha-03",
+      "category": "GitHub Actions",
+      "name": "GitHub Secrets 引用正确",
+      "passed": true,
+      "severity": "critical",
+      "detail": "引用 Secrets: DEEPSEEK_API_KEY, QWEN_API_KEY, LLM_PROVIDER, OPENAI_API_KEY",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251788+00:00"
+    },
+    {
+      "item_id": "gha-04",
+      "category": "GitHub Actions",
+      "name": "CI 包含 JSON 校验和质量评分",
+      "passed": true,
+      "severity": "warning",
+      "detail": "validate_json=[已配置], check_quality=[已配置]",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251796+00:00"
+    },
+    {
+      "item_id": "gha-05",
+      "category": "GitHub Actions",
+      "name": "GitHub Actions 有写权限",
+      "passed": true,
+      "severity": "critical",
+      "detail": "permissions: contents: write",
+      "suggestion": "",
+      "timestamp": "2026-05-11T12:22:08.251800+00:00"
+    }
+  ]
+}

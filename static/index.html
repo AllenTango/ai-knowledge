@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 知识库 · 公开看板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dracula.css">
+  <style>
+    .public-header {
+      padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+    }
+    .public-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--dracula-fg);
+      margin-bottom: 4px;
+    }
+    .public-subtitle {
+      font-size: 13px;
+      color: var(--dracula-comment);
+    }
+    .public-controls {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+      padding: 0 var(--spacing-lg) var(--spacing-md);
+    }
+    .sort-btn {
+      background: transparent;
+      border: 1px solid var(--dracula-line);
+      color: var(--dracula-comment);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .sort-btn:hover, .sort-btn.active {
+      border-color: var(--dracula-purple);
+      color: var(--dracula-purple);
+    }
+    .articles-container {
+      padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+      margin-top: var(--spacing-md);
+    }
+    .public-card {
+      display: flex;
+      flex-direction: column;
+    }
+    .public-card .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .view-toggle {
+      display: flex;
+      background: var(--dracula-selection);
+      border: 1px solid var(--dracula-line);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    .view-toggle button {
+      background: transparent;
+      border: none;
+      color: var(--dracula-comment);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all var(--transition-fast);
+    }
+    .view-toggle button.active {
+      background: var(--dracula-purple);
+      color: var(--dracula-bg);
+    }
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px var(--spacing-lg);
+      color: var(--dracula-comment);
+    }
+    .empty-state-icon { font-size: 64px; opacity: 0.4; margin-bottom: var(--spacing-md); }
+    .empty-state h2 { font-size: 20px; color: var(--dracula-fg); margin-bottom: var(--spacing-sm); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="kanban-header">
+    <div class="header-brand">
+      <span class="header-brand-icon">🤖</span>
+      <span class="header-brand-title">AI 知识库</span>
+    </div>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="toolbar" style="padding: 12px 24px; gap: 10px; margin-bottom: 12px;">
+    <span id="public-count" style="color:var(--dracula-comment);font-size:13px;white-space:nowrap;"></span>
+    <div class="search-box">
+      <span class="search-box-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="搜索标题、摘要、标签…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="filter-source">
+      <option value="">全部来源</option>
+      <option value="github">🐙 GitHub</option>
+      <option value="rss">📡 RSS</option>
+    </select>
+    <select class="filter-select" id="filter-score">
+      <option value="">全部评分</option>
+      <option value="8">⭐ 8.0+ 高分</option>
+      <option value="7">⭐ 7.0+</option>
+      <option value="5">⭐ 5.0+</option>
+    </select>
+    <select class="filter-select" id="filter-tag">
+      <option value="">全部标签</option>
+    </select>
+    <div style="flex:1"></div>
+    <div class="view-toggle">
+      <button id="view-grid" class="active" title="网格视图">▦</button>
+      <button id="view-list" title="列表视图">☰</button>
+    </div>
+    <button class="sort-btn" id="sort-date">📅 最新优先</button>
+  </div>
+
+  <!-- Articles Board -->
+  <div class="articles-container" id="articles-container">
+    <div class="board-loading">
+      <div class="loading-spinner"><div class="spinner"></div><span>加载条目…</span></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay"></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/kanban.js"></script>
+  <script>
+    let allPublished = [];
+    let sortOrder = "date";
+    let viewMode = "grid";
+    let tagOptions = new Set();
+
+    function updatePublicCount(total, filtered) {
+      const el = document.getElementById("public-count");
+      if (!el) return;
+      if (total === filtered) {
+        el.textContent = `共 ${total} 条`;
+      } else {
+        el.textContent = `共 ${total} 条 / 筛选 ${filtered} 条`;
+      }
+    }
+
+    async function init() {
+      try {
+        const articles = await API.getAllArticles({ status: "approved" });
+
+        allPublished = articles;
+        collectTags(articles);
+        renderTagFilter();
+        renderArticles();
+        updatePublicCount(articles.length, articles.length);
+      } catch (err) {
+        document.getElementById("articles-container").innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">⚠️</div>
+            <h2>加载失败</h2>
+            <p>${Kanban.escapeHtml(err.message)}</p>
+          </div>
+        `;
+        Kanban.showToast("加载失败: " + err.message, "error");
+      }
+    }
+
+    function collectTags(articles) {
+      tagOptions.clear();
+      for (const a of articles) {
+        for (const t of (a.tags || [])) {
+          tagOptions.add(t);
+        }
+      }
+    }
+
+    function renderTagFilter() {
+      const select = document.getElementById("filter-tag");
+      const current = select.value;
+      select.innerHTML = `<option value="">全部标签</option>`;
+      for (const t of [...tagOptions].sort()) {
+        select.innerHTML += `<option value="${Kanban.escapeHtml(t)}">${Kanban.escapeHtml(t)}</option>`;
+      }
+      select.value = current;
+    }
+
+    function getFilters() {
+      return {
+        keyword: document.getElementById("search-input").value.trim(),
+        source: document.getElementById("filter-source").value,
+        scoreMin: parseFloat(document.getElementById("filter-score").value) || null,
+        tag: document.getElementById("filter-tag").value,
+      };
+    }
+
+    function sortArticles(articles) {
+      const copy = [...articles];
+      if (sortOrder === "score") {
+        copy.sort((a, b) => (b.score || 0) - (a.score || 0));
+      } else {
+        copy.sort((a, b) => {
+          const ta = a.analyzed_at || a.fetched_at || "";
+          const tb = b.analyzed_at || b.fetched_at || "";
+          return tb.localeCompare(ta);
+        });
+      }
+      return copy;
+    }
+
+    function renderArticles() {
+      const container = document.getElementById("articles-container");
+      const filtered = Kanban.applyFilters(allPublished, getFilters());
+      const sorted = sortArticles(filtered);
+      updatePublicCount(allPublished.length, filtered.length);
+
+      if (sorted.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h2>暂无内容</h2>
+            <p>${allPublished.length === 0 ? "尚无已批准的条目" : "没有符合筛选条件的条目"}</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (viewMode === "list") {
+        container.innerHTML = `<div class="articles-list">${sorted.map(a => renderListCard(a)).join("")}</div>`;
+      } else {
+        container.innerHTML = `<div class="articles-grid">${sorted.map(a => renderGridCard(a)).join("")}</div>`;
+      }
+
+      container.querySelectorAll(".article-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const article = sorted.find(a => a.id === card.dataset.id);
+          if (article) Kanban.openModal(article, { editable: false });
+        });
+      });
+    }
+
+    function renderGridCard(article) {
+      const score = article.score ?? "—";
+      const scoreCls = Kanban.scoreClass(score);
+      const tags = (article.tags || []).slice(0, 4);
+      const tagsHtml = tags.map(t => `<span class="tag">${Kanban.escapeHtml(t)}</span>`).join("");
+      const source = article.source || "unknown";
+      const icon = source === "github" ? "🐙" : "📡";
+
+      return `
+        <div class="article-card public-card" data-id="${Kanban.escapeHtml(article.id)}">
+          <div class="card-header">
+            <span class="card-score ${scoreCls}">${score} ★</span>
+          </div>
+          <div class="card-body" style="flex:1">
+            <div class="card-title">${Kanban.escapeHtml(article.title || "—")}</div>
+            <div class="card-summary">${Kanban.escapeHtml(article.summary || "")}</div>
+            ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ""}
+          </div>
+          <div class="card-footer">
+            <span class="card-source"><span class="card-source-icon">${icon}</span>${Kanban.escapeHtml(source)}</span>
+            <span class="card-date">${Kanban.formatDate(article.analyzed_at || article.fetched_at)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderListCard(article) {
+      const score = article.score ?? "—";
+      const scoreCls = Kanban.scoreClass(score);
+      const tags = (article.tags || []).slice(0, 5);
+      const tagsHtml = tags.map(t => `<span class="tag">${Kanban.escapeHtml(t)}</span>`).join("");
+      const source = article.source || "unknown";
+      const icon = source === "github" ? "🐙" : "📡";
+
+      return `
+        <div class="article-card public-card" data-id="${Kanban.escapeHtml(article.id)}"
+             style="flex-direction:row; align-items:center; gap: var(--spacing-md);">
+          <span class="card-score ${scoreCls}" style="font-size:16px; padding: 4px 12px;">${score} ★</span>
+          <div style="flex:1; min-width:0;">
+            <div class="card-title" style="font-size:15px;">${Kanban.escapeHtml(article.title || "—")}</div>
+            <div class="card-summary" style="-webkit-line-clamp:1;">${Kanban.escapeHtml(article.summary || "")}</div>
+            ${tagsHtml ? `<div class="card-tags" style="margin-top:4px;">${tagsHtml}</div>` : ""}
+          </div>
+          <div style="display:flex; align-items:center; gap: var(--spacing-md); flex-shrink:0;">
+            <span class="card-source"><span class="card-source-icon">${icon}</span></span>
+            <span class="card-date">${Kanban.formatDate(article.analyzed_at || article.fetched_at)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Event listeners
+    document.getElementById("search-input").addEventListener("input", renderArticles);
+    document.getElementById("filter-source").addEventListener("change", renderArticles);
+    document.getElementById("filter-score").addEventListener("change", renderArticles);
+    document.getElementById("filter-tag").addEventListener("change", renderArticles);
+
+    document.getElementById("view-grid").addEventListener("click", () => {
+      viewMode = "grid";
+      document.getElementById("view-grid").classList.add("active");
+      document.getElementById("view-list").classList.remove("active");
+      renderArticles();
+    });
+
+    document.getElementById("view-list").addEventListener("click", () => {
+      viewMode = "list";
+      document.getElementById("view-list").classList.add("active");
+      document.getElementById("view-grid").classList.remove("active");
+      renderArticles();
+    });
+
+    document.getElementById("sort-date").addEventListener("click", () => {
+      sortOrder = sortOrder === "date" ? "score" : "date";
+      const btn = document.getElementById("sort-date");
+      btn.textContent = sortOrder === "date" ? "📅 最新优先" : "⭐ 评分优先";
+      btn.classList.toggle("active", sortOrder === "score");
+      renderArticles();
+    });
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "skills": {
+    "scrape-web": {
+      "version": "1.0.0",
+      "installedAt": 1778694527995
+    },
+    "weather-forecast": {
+      "version": "1.0.0",
+      "installedAt": 1778694543578
+    },
+    "instruction-web": {
+      "version": "1.0.0",
+      "installedAt": 1778694548088
+    },
+    "jpeng-knowledge-graph-memory": {
+      "version": "1.0.0",
+      "installedAt": 1778694563654
+    }
+  }
+}

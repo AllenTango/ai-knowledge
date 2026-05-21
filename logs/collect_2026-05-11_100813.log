@@ -1,0 +1,16 @@
+[2026-05-11 18:08:13] ========== 知识库采集开始 ==========
+[2026-05-11 18:08:13] 参数: sources=github,rss, limit=1
+[INFO] AI 知识库自动化流水线启动
+[INFO] 参数: sources=github,rss, limit=1, providers=default, dry_run=False
+[DEBUG] 目录初始化完成: /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/raw, /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/analyzer_output, /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/articles
+[INFO] ==================================================
+[INFO] Step 1: 数据采集
+[INFO] ==================================================
+[DEBUG] connect_tcp.started host='api.github.com' port=443 local_address=None timeout=30.0 socket_options=None
+[DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x76a390174130>
+[DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x76a3902cf9c0> server_hostname='api.github.com' timeout=30.0
+[DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x76a390174100>
+[DEBUG] send_request_headers.started request=<Request [b'GET']>
+[DEBUG] send_request_headers.complete
+[DEBUG] send_request_body.started request=<Request [b'GET']>
+[DEBUG] send_request_body.complete

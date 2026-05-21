@@ -1,0 +1,3 @@
+[2026-05-11 17:52:32] ========== 知识库采集开始 ==========
+[2026-05-11 17:52:32] 参数: sources=github,rss, limit=1
+scheduler/run_pipeline.sh: line 51: python: command not found

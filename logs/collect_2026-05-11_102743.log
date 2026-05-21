@@ -1,0 +1,20 @@
+[2026-05-11 18:27:43] ========== 知识库采集开始 ==========
+[2026-05-11 18:27:43] 参数: sources=github,rss, limit=2
+[INFO] AI 知识库自动化流水线启动
+[INFO] 参数: sources=github,rss, limit=2, providers=default, dry_run=False
+[DEBUG] 目录初始化完成: /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/raw, /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/analyzer_output, /home/dev/multi-agent-design/ai-zhishiku-v4/knowledge/articles
+[INFO] ==================================================
+[INFO] Step 1: 数据采集
+[INFO] ==================================================
+[DEBUG] connect_tcp.started host='api.github.com' port=443 local_address=None timeout=30.0 socket_options=None
+[DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7dcc69bf8130>
+[DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x7dcc69d579c0> server_hostname='api.github.com' timeout=30.0
+[DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x7dcc69bf8100>
+[DEBUG] send_request_headers.started request=<Request [b'GET']>
+[DEBUG] send_request_headers.complete
+[DEBUG] send_request_body.started request=<Request [b'GET']>
+[DEBUG] send_request_body.complete
+[DEBUG] receive_response_headers.started request=<Request [b'GET']>
+[DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 403, b'rate limit exceeded', [(b'Date', b'Mon, 11 May 2026 10:29:48 GMT'), (b'Server', b'Varnish'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubdomains; preload'), (b'X-Content-Type-Options', b'nosniff'), (b'X-Frame-Options', b'deny'), (b'X-XSS-Protection', b'1; mode=block'), (b'Content-Security-Policy', b"default-src 'none'; style-src 'unsafe-inline'"), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Expose-Headers', b'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-RateLimit-Used, X-RateLimit-Resource, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation, Sunset'), (b'Content-Type', b'application/json; charset=utf-8'), (b'Referrer-Policy', b'origin-when-cross-origin, strict-origin-when-cross-origin'), (b'X-GitHub-Media-Type', b'github.v3; format=json'), (b'X-RateLimit-Limit', b'10'), (b'X-RateLimit-Remaining', b'0'), (b'X-RateLimit-Used', b'10'), (b'X-RateLimit-Resource', b'search'), (b'X-RateLimit-Reset', b'1778495425'), (b'Content-Length', b'279'), (b'X-GitHub-Request-Id', b'233A:52CE8:6F89DDF:75C99EC:6A01AF9C')])
+[INFO] HTTP Request: GET https://api.github.com/search/repositories?q=AI+pushed%3A%3E2026-05-04+OR+LLM+pushed%3A%3E2026-05-04+OR+agent+pushed%3A%3E2026-05-04+OR+langchain+pushed%3A%3E2026-05-04+OR+llamaindex+pushed%3A%3E2026-05-04+OR+rag+pushed%3A%3E2026-05-04&sort=stars&order=desc&per_page=2 "HTTP/1.1 403 rate limit exceeded"
+[DEBUG] receive_response_body.started request=<Request [b'GET']>

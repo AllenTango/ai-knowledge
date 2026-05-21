@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 知识库 · 审核看板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dracula.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="kanban-header">
+    <div class="header-brand">
+      <span class="header-brand-icon">🤖</span>
+      <span class="header-brand-title">AI 知识库</span>
+      <span class="header-brand-subtitle">· 审核看板</span>
+    </div>
+    <div class="header-actions">
+      <a href="/" class="btn btn-ghost btn-sm">📖 公开看板</a>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-item total">
+      <span class="stat-icon">📚</span>
+      <span class="stat-value" id="stat-total">—</span>
+      <span class="stat-label">总条目</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item pending">
+      <span class="stat-icon">⏳</span>
+      <span class="stat-value" id="stat-pending">—</span>
+      <span class="stat-label">待审核</span>
+    </div>
+    <div class="stat-item approved">
+      <span class="stat-icon">✅</span>
+      <span class="stat-value" id="stat-approved">—</span>
+      <span class="stat-label">已批准</span>
+    </div>
+    <div class="stat-item rejected">
+      <span class="stat-icon">❌</span>
+      <span class="stat-value" id="stat-rejected">—</span>
+      <span class="stat-label">已驳回</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item total">
+      <span class="stat-icon">⭐</span>
+      <span class="stat-value" id="stat-avgscore">—</span>
+      <span class="stat-label">均分</span>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-box-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="搜索标题、摘要、标签…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="filter-source">
+      <option value="">全部来源</option>
+      <option value="github">🐙 GitHub</option>
+      <option value="rss">📡 RSS</option>
+    </select>
+    <select class="filter-select" id="filter-score">
+      <option value="">全部评分</option>
+      <option value="8">⭐ 8.0+</option>
+      <option value="7">⭐ 7.0+</option>
+      <option value="5">⭐ 5.0+</option>
+    </select>
+    <select class="filter-select" id="filter-tag">
+      <option value="">全部标签</option>
+    </select>
+  </div>
+
+  <!-- Kanban Board -->
+  <div class="kanban-board" id="kanban-board">
+    <div class="board-loading">
+      <div class="loading-spinner"><div class="spinner"></div><span>加载中…</span></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay"></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/kanban.js"></script>
+  <script src="/static/js/review.js"></script>
+  <script>
+    ReviewBoard.init();
+  </script>
+</body>
+</html>

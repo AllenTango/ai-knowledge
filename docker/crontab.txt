@@ -1,0 +1,19 @@
+# AI 知识库助手 —— supercronic 定时任务配置
+# 语法: 分 时 日 月 周 命令
+# 时区: Asia/Shanghai (UTC+8)
+# 注意: 以下时间为北京时间（CST）
+
+# 每天 08:00 执行采集流水线（采集 GitHub+RSS 各 20 条）
+0 8 * * * python3 /app/pipeline/pipeline.py --sources github,rss --limit 20 --verbose >> /app/logs/pipeline.log 2>&1
+
+# 每天 08:30 推送每日简报（推送 top 5 到全部渠道）
+30 8 * * * python3 /app/daily_digest.py --channels telegram feishu qq --top-n 5 --verbose >> /app/logs/digest.log 2>&1
+
+# 每天 18:00 第二次采集（傍晚补充采集）
+# 0 18 * * * python3 /app/pipeline/pipeline.py --sources github,rss --limit 10 --verbose >> /app/logs/pipeline.log 2>&1
+
+# 每天 18:30 第二次推送
+# 30 18 * * * python3 /app/daily_digest.py --channels telegram feishu qq --top-n 5 --verbose >> /app/logs/digest.log 2>&1
+
+# 每小时清理 30 天前的旧日志
+0 * * * * find /app/logs -name "*.log" -type f -mtime +30 -delete 2>/dev/null || true
