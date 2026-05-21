@@ -4,7 +4,7 @@
 #
 # 使用方法:
 #   添加到 crontab:  crontab -e
-#   内容: 0 9 * * * /home/dev/multi-agent-design/ai-zhishiku-v4/scheduler/daily_digest_cron.sh
+#   内容: 0 9 * * * /home/dev/multi-agent-design/ai-knowledge/scheduler/daily_digest_cron.sh
 #
 # 日志记录:
 #   日志文件: logs/daily_digest.log

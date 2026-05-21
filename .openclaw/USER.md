@@ -8,7 +8,7 @@
 
 ## Context
 
-- 项目：ai-zhishiku-v4（知识库管理）
+- 项目：ai-knowledge（知识库管理）
 - 环境：WSL2 (Windows)
 - 首次接触：2026-05-11
 - 用户对 OpenClaw 有一定了解，正在进行 agent 个性化配置

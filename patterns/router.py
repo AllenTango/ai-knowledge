@@ -159,7 +159,7 @@ def handle_github_search(query: str) -> str:
 
     headers = {
         "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "ai-zhishiku-router/1.0",
+        "User-Agent": "ai-knowledge-router/1.0",
     }
 
     req = urllib.request.Request(url, headers=headers)

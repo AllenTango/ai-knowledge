@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-AI 知识库助手（ai-zhishiku-v4）是一套自动化知识采集与分发系统。系统每日从 GitHub Trending 和 Hacker News 中自动抓取 AI / LLM / Agent 领域的技术动态，通过 AI 模型对内容进行分析、摘要、结构化处理后存入本地 JSON 知识库，最终经由 Telegram、飞书、微信、QQ 等多渠道 IM 工具分发给订阅用户。同时提供一套基于 Dracula 暗黑主题的人工审核看板页面，供编辑人员对入库内容进行复核与修正。
+AI 知识库助手（ai-knowledge）是一套自动化知识采集与分发系统。系统每日从 GitHub Trending 和 Hacker News 中自动抓取 AI / LLM / Agent 领域的技术动态，通过 AI 模型对内容进行分析、摘要、结构化处理后存入本地 JSON 知识库，最终经由 Telegram、飞书、微信、QQ 等多渠道 IM 工具分发给订阅用户。同时提供一套基于 Dracula 暗黑主题的人工审核看板页面，供编辑人员对入库内容进行复核与修正。
 
 ---
 
@@ -47,7 +47,7 @@ AI 知识库助手（ai-zhishiku-v4）是一套自动化知识采集与分发系
 ## 项目结构
 
 ```
-ai-zhishiku-v4/
+ai-knowledge/
 ├── workflows/                      # LangGraph 工作流节点实现
 │   ├── __init__.py
 │   ├── state.py                   # KBState 状态定义（TypedDict）

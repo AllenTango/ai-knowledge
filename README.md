@@ -32,8 +32,8 @@
 
 ```bash
 # 1. Clone 项目
-git clone https://github.com/your-repo/ai-zhishiku.git
-cd ai-zhishiku/ai-zhishiku-v4
+git clone https://github.com/AllenTango/ai-knowledge.git
+cd ai-knowledge
 
 # 2. 配置 .env
 cp env.example .env

@@ -1,7 +1,7 @@
 # AI 知识库看板方案
 
 > 规划时间：2026-05-12
-> 项目：ai-zhishiku-v4
+> 项目：ai-knowledge
 
 ## 背景
 

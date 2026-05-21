@@ -22,7 +22,7 @@ _随着时间推移，精选值得长期保留的内容。_
 波士与小芽约定了工作范围规则：
 
 - 🏠 **小芽的家**：`.openclaw/` 目录
-- 💼 **工作地方**：`.openclaw/` 的父级目录（即 `/home/dev/multi-agent-design/ai-zhishiku-v4/`）
+- 💼 **工作地方**：`.openclaw/` 的父级目录（即 `/home/dev/multi-agent-design/ai-knowledge/`）
 - 🚶 **活动范围**：仅限工作地方
 - 🚫 **不能随意离开**：除非波士明确让我去其他目录
 - ✅ **做事后返回**：完成外部任务后，立即返回工作地方

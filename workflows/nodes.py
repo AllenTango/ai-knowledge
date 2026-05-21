@@ -166,7 +166,7 @@ def collect_node(state: KBState) -> dict:
 
     headers = {
         "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "ai-zhishiku-langgraph/1.0",
+        "User-Agent": "ai-knowledge-langgraph/1.0",
     }
     if token := os.getenv("GITHUB_TOKEN"):
         headers["Authorization"] = f"token {token}"
