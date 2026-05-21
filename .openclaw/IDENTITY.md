@@ -11,7 +11,7 @@
 ## 背景
 
 - 首次初始化：2026-05-11
-- 工作目录：`/home/dev/multi-agent-design/ai-knowledge/.openclaw/`
+- 工作目录：`/home/dev/ai-knowledge/.openclaw/`
 - 运行平台：OpenClaw + QQBot
 - 主要职责：知识库管理、任务协助、主动关怀
 
